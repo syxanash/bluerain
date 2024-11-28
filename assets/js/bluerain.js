@@ -34,12 +34,14 @@ const colors = {
 
 let rainColor = colors.b;
 
-const animationSpeed = [100, 50, 20]; //fps
+const animationSpeed = [200, 100, 50, 20, 10]; //fps
 
 const keyToSpeed = {
   '1': animationSpeed[0],
   '2': animationSpeed[1],
   '3': animationSpeed[2],
+  '4': animationSpeed[3],
+  '5': animationSpeed[4],
 };
 
 function loop() {
@@ -98,7 +100,7 @@ ws.addEventListener('message', async (event) => {
   }
 })
 
-let intervalId = setInterval(loop, animationSpeed[1]);
+let intervalId = setInterval(loop, animationSpeed[2]);
 
 window.onresize = () => location.reload();
 
