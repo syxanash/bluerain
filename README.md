@@ -4,7 +4,7 @@ Bluesky firehose visualized in a Matrix-style rain
 
 ![bluerain](assets/images/bluerain.gif)
 
-## Keys
+## Controls
 
 <kbd>Space</kbd> Pause the animation (if you want to read some skeet)<br>
 
