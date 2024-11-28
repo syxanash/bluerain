@@ -32,6 +32,7 @@ const colors = {
   p: '#ff0ac6', // pink
 }
 
+var rainColorTouch = 1;
 let rainColor = colors.b;
 
 const animationSpeed = [200, 100, 50, 20, 10]; //fps
@@ -118,3 +119,9 @@ addEventListener("keydown", (event) => {
     rainColor = colors[event.key.toLocaleLowerCase()]
   }
 });
+
+addEventListener("touchstart", () => {
+  rainColorTouch = (rainColorTouch + 1) % Object.keys(colors).length
+
+  rainColor = colors[Object.keys(colors)[rainColorTouch]];
+})
