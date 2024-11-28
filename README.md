@@ -15,5 +15,3 @@ Bluesky firehose visualized in a Matrix-style rain
 <kbd>R</kbd> change rain color to red<br>
 <kbd>Y</kbd> change rain color to yellow<br>
 <kbd>P</kbd> change rain color to pink<br>
-
-<kbd>Enter</kbd> toggle fullscreen<br>
