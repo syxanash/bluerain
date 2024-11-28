@@ -1,3 +1,6 @@
+// WARNING code is ugly I just wanted to make
+// something fast to see if I could do it lol
+
 const canvas = document.querySelector('canvas'),
   ctx = canvas.getContext('2d');
 
