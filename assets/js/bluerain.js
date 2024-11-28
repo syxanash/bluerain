@@ -115,4 +115,12 @@ addEventListener("keydown", (event) => {
   if (colors[event.key.toLocaleLowerCase()]) {
     rainColor = colors[event.key.toLocaleLowerCase()]
   }
+
+  if (event.key === 'Enter') {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
 });
