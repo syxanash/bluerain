@@ -1,6 +1,6 @@
 # Bluerain
 
-Bluesky live skeets visualized in a Matrix-style rain
+Bluesky firehose visualized in a Matrix-style rain
 
 ![bluerain](assets/images/bluerain.gif)
 
