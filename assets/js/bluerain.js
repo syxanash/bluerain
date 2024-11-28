@@ -4,13 +4,11 @@ const canvas = document.querySelector('canvas'),
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Setting up the columns
 const fontSize = 17,
   columns = canvas.width / fontSize;
 
 ctx.font = fontSize + "px monospace";
 
-// Setting up the drops
 const drops = [];
 const skeets = [];
 const skeetsIndex = [];
@@ -24,14 +22,14 @@ for (let i = 0; i < columns; i++) {
 let pauseAnimation = false;
 
 const colors = {
-  red: '#ff0a0a',
-  blue: '#0ae2ff',
-  green: '#0aff0a',
-  yellow: '#ffff0a',
-  pink: '#ff0ac6',
+  r: '#ff0a0a', // red
+  b: '#0ae2ff', // blue
+  g: '#0aff0a', // green
+  y: '#ffff0a', // yellow
+  p: '#ff0ac6', // pink
 }
 
-let rainColor = colors.blue;
+let rainColor = colors.b;
 
 const animationSpeed = [100, 50, 20]; //fps
 let animationIndex = 1;
@@ -112,25 +110,7 @@ addEventListener("keydown", (event) => {
     intervalId = setInterval(loop, keyToSpeed[event.key]);
   }
 
-  if (event.code === 'KeyB') {
-    rainColor = colors.blue;
+  if (colors[event.key.toLocaleLowerCase()]) {
+    rainColor = colors[event.key.toLocaleLowerCase()]
   }
-
-  if (event.code === 'KeyG') {
-    rainColor = colors.green;
-  }
-
-  if (event.code === 'KeyR') {
-    rainColor = colors.red;
-  }
-
-  if (event.code === 'KeyY') {
-    rainColor = colors.yellow;
-  }
-
-  if (event.code === 'KeyP') {
-    rainColor = colors.pink;
-  }
-
-  console.log(event.code);
 });
