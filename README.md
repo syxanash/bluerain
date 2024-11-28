@@ -2,6 +2,8 @@
 
 Bluesky live skeets visualized in a Matrix-style rain
 
+![bluerain](assets/images/bluerain.gif)
+
 ## Keys
 
 <kbd>Space</kbd> Pauses the animation (if you want to read some skeet)<br>
