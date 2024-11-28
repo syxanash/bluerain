@@ -22,6 +22,17 @@ for (let i = 0; i < columns; i++) {
 }
 
 let pauseAnimation = false;
+
+const colors = {
+  red: '#ff0a0a',
+  blue: '#0ae2ff',
+  green: '#0aff0a',
+  yellow: '#ffff0a',
+  pink: '#ff0ac6',
+}
+
+let rainColor = colors.blue;
+
 const animationSpeed = [100, 50, 20]; //fps
 let animationIndex = 1;
 
@@ -43,7 +54,7 @@ function loop() {
       const text = characters[skeetsIndex[i]];
 
       if (text) {
-        ctx.fillStyle = '#82c8e5';
+        ctx.fillStyle = rainColor;
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
         drops[i]++;
@@ -100,4 +111,26 @@ addEventListener("keydown", (event) => {
     clearInterval(intervalId);
     intervalId = setInterval(loop, keyToSpeed[event.key]);
   }
+
+  if (event.code === 'KeyB') {
+    rainColor = colors.blue;
+  }
+
+  if (event.code === 'KeyG') {
+    rainColor = colors.green;
+  }
+
+  if (event.code === 'KeyR') {
+    rainColor = colors.red;
+  }
+
+  if (event.code === 'KeyY') {
+    rainColor = colors.yellow;
+  }
+
+  if (event.code === 'KeyP') {
+    rainColor = colors.pink;
+  }
+
+  console.log(event.code);
 });
