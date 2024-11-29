@@ -70,6 +70,8 @@ function loop() {
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
         if (oldText) {
+          ctx.fillStyle = "#000000";
+          ctx.fillText(oldText, i * fontSize, (drops[i]-1) * fontSize);
           ctx.fillStyle = rainColor;
           ctx.fillText(oldText, i * fontSize, (drops[i]-1) * fontSize);
         }
