@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Chicago Plain';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Chicago Plain'), url('../fonts/Chicago.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Matrix Code NFI';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Matrix Code NFI'), url('../fonts/matrix code nfi.woff') format('woff');
+}
+    
 * {
   margin: 0;
   padding: 0
