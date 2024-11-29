@@ -11,7 +11,7 @@ const colors = {
   p: "#ff0ac6", // pink
 };
 
-var rainColorTouch = 1;
+let rainColorTouch = 1;
 let rainColor = colors.b;
 
 const animationSpeed = [200, 100, 50, 20, 10]; //fps
@@ -58,10 +58,10 @@ function loop() {
     if (i < skeets.length) {
       const characters = Array.from(skeets[i]); // used to fix emoji encoding
       const text = characters[skeetsIndex[i]];
+      let oldText = '';
 
-      if (skeetsIndex[i] >= 1) {
-        var oldChar = Array.from(skeets[i]);
-        var oldText = oldChar[skeetsIndex[i]-1];
+      if (drops[i] >= 2) {
+        oldText = characters[skeetsIndex[i] - 1];
       }
 
       if (text) {
@@ -69,11 +69,12 @@ function loop() {
         ctx.fillStyle = "#ffffff";
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-        if (oldText) {
+        if (drops[i] >= 2) {
+          // color the previously rendered characters
           ctx.fillStyle = "#000000";
-          ctx.fillText(oldText, i * fontSize, (drops[i]-1) * fontSize);
+          ctx.fillText(oldText, i * fontSize, (drops[i] - 1) * fontSize);
           ctx.fillStyle = rainColor;
-          ctx.fillText(oldText, i * fontSize, (drops[i]-1) * fontSize);
+          ctx.fillText(oldText, i * fontSize, (drops[i] - 1) * fontSize);
         }
 
         drops[i]++;
@@ -81,6 +82,13 @@ function loop() {
       }
 
       if (drops[i] * fontSize > canvas.height) {
+        // color the last character on the grid otherwise they stay white
+
+        ctx.fillStyle = "#000000";
+        ctx.fillText(text, i * fontSize, (drops[i] - 1) * fontSize);
+        ctx.fillStyle = rainColor;
+        ctx.fillText(text, i * fontSize, (drops[i] - 1) * fontSize);
+
         drops[i] = 1;
       }
 
