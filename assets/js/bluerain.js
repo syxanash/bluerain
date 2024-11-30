@@ -156,3 +156,13 @@ addEventListener("touchstart", () => {
 
   rainColor = colors[Object.keys(colors)[rainColorTouch]];
 });
+
+const helpText = `%cKEYBOARD CONTROLS:
+SPACE - pause play animation
+1, 2, 3, 4, 5 - change rain speed (3 default)
+G, R, B, Y, P - change rain color (green, red, blue, yellow, pink)
+F - change rain font
+`
+
+console.log(helpText, "font-size: small")
+console.log('%chttps://github.com/syxanash/bluerain', "font-size: medium");
