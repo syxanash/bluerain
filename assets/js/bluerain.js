@@ -26,6 +26,7 @@ const keyToSpeed = {
 
 const rainFonts = ["monospace", "Chicago Plain", "Matrix Code NFI", "Courier New"];
 let rainFontNumber = 0;
+let showEmojis = true;
 
 const canvas = document.querySelector("canvas"),
   ctx = canvas.getContext("2d");
@@ -50,6 +51,8 @@ for (let i = 0; i < columns; i++) {
 
 const sanitizeForEmojis = (string) => [...new Intl.Segmenter().segment(string)].map(x => x.segment)
 
+const stripEmojis = (str) => str.replace(/\p{Emoji}/gu, '');
+
 function loop() {
   if (pauseAnimation) return;
 
@@ -58,7 +61,7 @@ function loop() {
 
   for (let i = 0; i < drops.length; i++) {
     if (i < skeets.length) {
-      const characters = sanitizeForEmojis(skeets[i]);
+      const characters = showEmojis ? sanitizeForEmojis(skeets[i]) : stripEmojis(skeets[i]);
       const text = characters[skeetsIndex[i]];
       let oldText = '';
 
@@ -134,18 +137,19 @@ let intervalId = setInterval(loop, animationSpeed[2]);
 window.onresize = () => location.reload();
 
 addEventListener("keydown", (event) => {
-  if (event.code === "Space") {
+  if (event.code === "Space")
     pauseAnimation = !pauseAnimation;
-  }
 
   if (keyToSpeed[event.key]) {
     clearInterval(intervalId);
     intervalId = setInterval(loop, keyToSpeed[event.key]);
   }
 
-  if (colors[event.key.toLocaleLowerCase()]) {
+  if (colors[event.key.toLocaleLowerCase()])
     rainColor = colors[event.key.toLocaleLowerCase()];
-  }
+
+  if (event.code === "KeyE")
+    showEmojis = !showEmojis;
 
   if (event.code === "KeyF") {
     rainFontNumber = (rainFontNumber + 1) % rainFonts.length;
@@ -163,6 +167,7 @@ const helpText = `%cKEYBOARD CONTROLS:
 SPACE - pause play animation
 1, 2, 3, 4, 5 - change rain speed (3 default)
 G, R, B, Y, P - change rain color (green, red, blue, yellow, pink)
+E - toggle show/hide emojis
 F - change rain font
 `
 
