@@ -16,5 +16,5 @@ Bluesky firehose visualized in a Matrix-style rain
 <kbd>Y</kbd> change rain color to yellow<br>
 <kbd>P</kbd> change rain color to pink<br>
 
-<kbd>E</kbd> toggle show/hide emojis
+<kbd>E</kbd> toggle show/hide emojis<br>
 <kbd>F</kbd> change rain font
