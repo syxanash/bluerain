@@ -48,6 +48,8 @@ for (let i = 0; i < columns; i++) {
   skeetsIndex[i] = 0;
 }
 
+const sanitizeForEmojis = (string) => [...new Intl.Segmenter().segment(string)].map(x => x.segment)
+
 function loop() {
   if (pauseAnimation) return;
 
@@ -56,7 +58,7 @@ function loop() {
 
   for (let i = 0; i < drops.length; i++) {
     if (i < skeets.length) {
-      const characters = Array.from(skeets[i]); // used to fix emoji encoding
+      const characters = sanitizeForEmojis(skeets[i]);
       const text = characters[skeetsIndex[i]];
       let oldText = '';
 
@@ -165,4 +167,4 @@ F - change rain font
 `
 
 console.log(helpText, "font-size: small")
-console.log('%chttps://github.com/syxanash/bluerain', "font-size: medium");
+console.log("%chttps://github.com/syxanash/bluerain", "font-size: medium");
