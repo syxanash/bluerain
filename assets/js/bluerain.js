@@ -27,6 +27,7 @@ const keyToSpeed = {
 const rainFonts = ["monospace", "Chicago Plain", "Matrix Code NFI", "Courier New"];
 let rainFontNumber = 0;
 let showEmojis = true;
+let showTextShadow = false;
 
 const canvas = document.querySelector("canvas"),
   ctx = canvas.getContext("2d");
@@ -48,8 +49,16 @@ const sanitizeForEmojis = (string) => [...new Intl.Segmenter().segment(string)].
 const stripEmojis = (str) => str.replace(/\p{Emoji}/gu, '');
 
 const writeCharacter = (color, character, x, y) => {
-  ctx.fillStyle = color;
-  ctx.fillText(character, x, y);
+  if (showTextShadow) {
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = color;
+    ctx.fillStyle = color;
+    ctx.fillText(character, x, y);
+    ctx.shadowBlur = 0;
+  } else {
+    ctx.fillStyle = color;
+    ctx.fillText(character, x, y);
+  }
 };
 
 function loop() {
@@ -140,6 +149,8 @@ addEventListener("keydown", (event) => {
 
   if (event.code === "KeyE") showEmojis = !showEmojis;
 
+  if (event.code === "KeyS") showTextShadow = !showTextShadow;
+
   if (event.code === "KeyF") {
     rainFontNumber = (rainFontNumber + 1) % rainFonts.length;
     ctx.font = `${fontSize}px ${rainFonts[rainFontNumber]}`;
@@ -157,6 +168,7 @@ SPACE - pause/play animation
 G, R, B, Y, P - change rain color (green, red, blue, yellow, pink)
 E - toggle show/hide emojis
 F - change rain font
+S - toggle text shadow (might slow down your browser!)
 `;
 
 console.log(helpText, "font-size: small");
