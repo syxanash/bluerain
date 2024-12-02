@@ -14,7 +14,7 @@ const colors = {
 let rainColorTouch = 1;
 let rainColor = colors.b;
 
-const animationSpeed = [200, 100, 50, 20, 10]; //fps
+const animationSpeed = [200, 100, 50, 20, 10]; // fps
 
 const keyToSpeed = {
   1: animationSpeed[0],
@@ -35,51 +35,45 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const fontSize = 17,
-  columns = canvas.width / fontSize;
+  columns = Math.floor(canvas.width / fontSize);
 
 ctx.font = `${fontSize}px ${rainFonts[rainFontNumber]}`;
 
-const drops = [];
-const skeets = [];
-const skeetsIndex = [];
+const drops = Array(columns).fill(1);
+const skeets = Array(columns).fill("");
+const skeetsIndex = Array(columns).fill(0);
 
-for (let i = 0; i < columns; i++) {
-  drops[i] = 1;
-  skeets[i] = "";
-  skeetsIndex[i] = 0;
-}
-
-const sanitizeForEmojis = (string) => [...new Intl.Segmenter().segment(string)].map(x => x.segment)
+const sanitizeForEmojis = (string) => [...new Intl.Segmenter().segment(string)].map(x => x.segment);
 
 const stripEmojis = (str) => str.replace(/\p{Emoji}/gu, '');
+
+const writeCharacter = (color, character, x, y) => {
+  ctx.fillStyle = color;
+  ctx.fillText(character, x, y);
+};
 
 function loop() {
   if (pauseAnimation) return;
 
-  ctx.fillStyle = "rgba(0, 0, 0, .05)";
+  // Add fade effect to the canvas
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   for (let i = 0; i < drops.length; i++) {
     if (i < skeets.length) {
       const characters = showEmojis ? sanitizeForEmojis(skeets[i]) : stripEmojis(skeets[i]);
-      const text = characters[skeetsIndex[i]];
-      let oldText = '';
+      const character = characters[skeetsIndex[i]];
 
-      if (drops[i] >= 2) {
-        oldText = characters[skeetsIndex[i] - 1];
-      }
+      if (character) {
+        // Render the current character in white
+        writeCharacter("#ffffff", character, i * fontSize, drops[i] * fontSize);
 
-      if (text) {
-        // font color is white only for the last newest rendered character
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
+        // Render the previous character in the rain color if applicable
         if (drops[i] >= 2) {
-          // color the previously rendered characters
-          ctx.fillStyle = "#000000";
-          ctx.fillText(oldText, i * fontSize, (drops[i] - 1) * fontSize);
-          ctx.fillStyle = rainColor;
-          ctx.fillText(oldText, i * fontSize, (drops[i] - 1) * fontSize);
+          const oldCharacter = characters[skeetsIndex[i] - 1];
+          if (oldCharacter) {
+            writeCharacter(rainColor, oldCharacter, i * fontSize, (drops[i] - 1) * fontSize);
+          }
         }
 
         drops[i]++;
@@ -88,11 +82,7 @@ function loop() {
 
       if (drops[i] * fontSize > canvas.height) {
         // color the last character on the grid otherwise they stay white
-
-        ctx.fillStyle = "#000000";
-        ctx.fillText(text, i * fontSize, (drops[i] - 1) * fontSize);
-        ctx.fillStyle = rainColor;
-        ctx.fillText(text, i * fontSize, (drops[i] - 1) * fontSize);
+        writeCharacter(rainColor, character, i * fontSize, (drops[i] - 1) * fontSize);
 
         drops[i] = 1;
       }
@@ -118,6 +108,7 @@ function addWord(word) {
   }
 }
 
+// WebSocket connection for live words
 const ws = new WebSocket(
   "wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post"
 );
@@ -126,7 +117,6 @@ ws.addEventListener("message", async (event) => {
   if (pauseAnimation) return;
 
   const message = JSON.parse(event.data);
-
   if (message?.commit && message?.commit.operation === "create") {
     addWord(message?.commit.record.text);
   }
@@ -134,22 +124,21 @@ ws.addEventListener("message", async (event) => {
 
 let intervalId = setInterval(loop, animationSpeed[2]);
 
+// Adjust canvas size on window resize
 window.onresize = () => location.reload();
 
+// Keyboard and touch controls
 addEventListener("keydown", (event) => {
-  if (event.code === "Space")
-    pauseAnimation = !pauseAnimation;
+  if (event.code === "Space") pauseAnimation = !pauseAnimation;
 
   if (keyToSpeed[event.key]) {
     clearInterval(intervalId);
     intervalId = setInterval(loop, keyToSpeed[event.key]);
   }
 
-  if (colors[event.key.toLocaleLowerCase()])
-    rainColor = colors[event.key.toLocaleLowerCase()];
+  if (colors[event.key.toLowerCase()]) rainColor = colors[event.key.toLowerCase()];
 
-  if (event.code === "KeyE")
-    showEmojis = !showEmojis;
+  if (event.code === "KeyE") showEmojis = !showEmojis;
 
   if (event.code === "KeyF") {
     rainFontNumber = (rainFontNumber + 1) % rainFonts.length;
@@ -159,17 +148,16 @@ addEventListener("keydown", (event) => {
 
 addEventListener("touchstart", () => {
   rainColorTouch = (rainColorTouch + 1) % Object.keys(colors).length;
-
   rainColor = colors[Object.keys(colors)[rainColorTouch]];
 });
 
 const helpText = `%cKEYBOARD CONTROLS:
-SPACE - pause play animation
+SPACE - pause/play animation
 1, 2, 3, 4, 5 - change rain speed (3 default)
 G, R, B, Y, P - change rain color (green, red, blue, yellow, pink)
 E - toggle show/hide emojis
 F - change rain font
-`
+`;
 
-console.log(helpText, "font-size: small")
+console.log(helpText, "font-size: small");
 console.log("%chttps://github.com/syxanash/bluerain", "font-size: medium");
