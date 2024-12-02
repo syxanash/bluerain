@@ -18,4 +18,4 @@ Bluesky firehose visualized in a Matrix-style rain
 
 <kbd>E</kbd> toggle show/hide emojis<br>
 <kbd>F</kbd> change rain font<br>
-<kbd>S</kbd> toggle text shadow (⚠ might slow down your browser!)
+<kbd>S</kbd> toggle text shadow (⚠️ might slow down your browser!)
