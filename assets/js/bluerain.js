@@ -14,7 +14,7 @@ const colors = {
 let rainColorTouch = 1;
 let rainColor = colors.b;
 
-const animationSpeed = [300, 100, 50, 20, 10];
+const animationSpeed = [300, 100, 45, 20, 10];
 let choosenSpeed = animationSpeed[2];
 
 const rainFonts = ["monospace", "Chicago Plain", "Matrix Code NFI", "Courier New"];
