@@ -14,15 +14,8 @@ const colors = {
 let rainColorTouch = 1;
 let rainColor = colors.b;
 
-const animationSpeed = [200, 100, 50, 20, 10]; // fps
-
-const keyToSpeed = {
-  1: animationSpeed[0],
-  2: animationSpeed[1],
-  3: animationSpeed[2],
-  4: animationSpeed[3],
-  5: animationSpeed[4],
-};
+const animationSpeed = [300, 100, 50, 20, 10];
+let choosenSpeed = animationSpeed[2];
 
 const rainFonts = ["monospace", "Chicago Plain", "Matrix Code NFI", "Courier New"];
 let rainFontNumber = 0;
@@ -61,9 +54,7 @@ const writeCharacter = (color, character, x, y) => {
   }
 };
 
-function loop() {
-  if (pauseAnimation) return;
-
+function animateRain() {
   // Add fade effect to the canvas
   ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -105,6 +96,16 @@ function loop() {
   }
 }
 
+function loop() {
+  if (!pauseAnimation) {
+    animateRain();
+  }
+
+  setTimeout(() => {
+    requestAnimationFrame(loop);
+  }, choosenSpeed);
+}
+
 function addWord(word) {
   for (let j = 0; j < drops.length; j++) {
     if (skeetsIndex[j] === 0 && skeets[j] === "") {
@@ -131,8 +132,6 @@ ws.addEventListener("message", async (event) => {
   }
 });
 
-let intervalId = setInterval(loop, animationSpeed[2]);
-
 // Adjust canvas size on window resize
 window.onresize = () => location.reload();
 
@@ -140,9 +139,8 @@ window.onresize = () => location.reload();
 addEventListener("keydown", (event) => {
   if (event.code === "Space") pauseAnimation = !pauseAnimation;
 
-  if (keyToSpeed[event.key]) {
-    clearInterval(intervalId);
-    intervalId = setInterval(loop, keyToSpeed[event.key]);
+  if (animationSpeed[event.key - 1]) {
+    choosenSpeed = animationSpeed[event.key - 1];
   }
 
   if (colors[event.key.toLowerCase()]) rainColor = colors[event.key.toLowerCase()];
@@ -173,3 +171,5 @@ S - toggle text shadow (might slow down your browser!)
 
 console.log(helpText, "font-size: small");
 console.log("%chttps://github.com/syxanash/bluerain", "font-size: medium");
+
+loop();
