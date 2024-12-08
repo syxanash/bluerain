@@ -14,8 +14,15 @@ const colors = {
 let rainColorTouch = 1;
 let rainColor = colors.b;
 
-const animationSpeed = [300, 100, 45, 20, 10];
+const animationSpeed = [5, 10, 20, 30, 60];
 let choosenSpeed = animationSpeed[2];
+let animationInterval = 1000 / choosenSpeed;
+
+let startTime = performance.now();
+let previousTime = startTime;
+
+let currentTime = 0;
+let deltaTime = 0;
 
 const rainFonts = ["monospace", "Chicago Plain", "Matrix Code NFI", "Courier New"];
 let rainFontNumber = 0;
@@ -96,14 +103,19 @@ function animateRain() {
   }
 }
 
-function loop() {
-  if (!pauseAnimation) {
-    animateRain();
+function loop(timestamp) {
+  currentTime = timestamp;
+  deltaTime = currentTime - previousTime;
+
+  if (deltaTime >= animationInterval) {
+    previousTime = currentTime - (deltaTime % animationInterval);
+
+    if (!pauseAnimation)
+      animateRain();
   }
 
-  setTimeout(() => {
-    requestAnimationFrame(loop);
-  }, choosenSpeed);
+  // Request the next frame
+  requestAnimationFrame(loop);
 }
 
 function addWord(word) {
@@ -141,6 +153,7 @@ addEventListener("keydown", (event) => {
 
   if (animationSpeed[event.key - 1]) {
     choosenSpeed = animationSpeed[event.key - 1];
+    animationInterval = 1000 / choosenSpeed;
   }
 
   if (colors[event.key.toLowerCase()]) rainColor = colors[event.key.toLowerCase()];
@@ -172,4 +185,4 @@ S - toggle text shadow (might slow down your browser!)
 console.log(helpText, "font-size: small");
 console.log("%chttps://github.com/syxanash/bluerain", "font-size: medium");
 
-loop();
+requestAnimationFrame(loop);
