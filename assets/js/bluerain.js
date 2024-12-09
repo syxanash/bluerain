@@ -1,5 +1,4 @@
-// WARNING code is ugly I just wanted to make
-// something fast to see if I could do it lol
+import Util from './util.js';
 
 let pauseAnimation = false;
 
@@ -145,7 +144,7 @@ ws.addEventListener("message", async (event) => {
 });
 
 // Adjust canvas size on window resize
-window.onresize = () => location.reload();
+window.onresize = () => { if (!Util.isMobile() ) location.reload(); }
 
 // Keyboard and touch controls
 addEventListener("keydown", (event) => {

@@ -11,7 +11,7 @@
   font-weight: normal;
   src: local('Matrix Code NFI'), url('../fonts/matrix code nfi.woff') format('woff');
 }
-    
+
 * {
   margin: 0;
   padding: 0
@@ -23,4 +23,5 @@ body {
 
 canvas {
   display: block;
+  user-select: none;
 }
