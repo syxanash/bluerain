@@ -13,4 +13,4 @@ tl;dr: What you see on the screen is a live feed of skeets written by Bluesky us
 # Credits
 
 Originally forked from this [codepen](https://codepen.io/yaclive/pen/EayLYO)<br>
-CDE theme source code: [classic-stylesheets](https://nielssp.github.io/classic-stylesheets/)
+CDE theme: [classic-stylesheets](https://nielssp.github.io/classic-stylesheets/)
