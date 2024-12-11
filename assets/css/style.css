@@ -71,6 +71,11 @@ canvas {
   padding-top: 10px;
 }
 
+.window-logo {
+  filter: brightness(2000%);
+  height: 13px;
+}
+
 .select-style {
   width: 150px;
 }
