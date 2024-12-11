@@ -67,6 +67,10 @@ canvas {
   width: 50px;
 }
 
+.select-wrapper {
+  padding-top: 10px;
+}
+
 .select-style {
   width: 150px;
 }
