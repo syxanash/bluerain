@@ -17,21 +17,77 @@
   <meta name="author" content="Simone Marzulli">
   <link rel="canonical" href="https://simone.computer/bluerain">
 
-  <link rel="icon" type="image/png" href="assets/images/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="assets/images/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content="Bluerain" />
-  <link rel="manifest" href="site.webmanifest" />
+  <link rel="icon" type="image/png" href="assets/images/favicon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg">
+  <link rel="shortcut icon" href="assets/images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Bluerain">
+  <link rel="manifest" href="site.webmanifest">
 
   <title>Bluerain</title>
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/cde/combined.min.css">
+  <link rel="stylesheet" href="assets/css/cde/skins/black.css">
 </head>
 
 <body>
   <canvas>
   </canvas>
-  <script type="module" defer src="assets/js/bluerain.js"></script>
+  <div class="corner-buttons fade-in">
+    <button id="showSettings">Settings</button>
+    <button id="pauseButton">Pause</button>
+  </div>
+  <dialog class="dialog-style" style="background-color: #00000045 !important;">
+    <div class="window active" style="background-color: #00000045 !important;">
+      <div class="title-bar">
+        <div class="title-bar-text">
+          Settings
+        </div>
+        <div class="title-bar-buttons">
+          <button id="closeButton" data-close=""></button>
+        </div>
+      </div>
+      <div class="window-body" style="background-color: #00000045 !important;">
+        <div class="body-style" style="background-color: #00000045 !important;">
+          <button id="showEmojisButton">Show Emojis</button><br><br>
+          <button id="toggleTextShadowButton">Toggle Text Shadow</button><br><br>
+          <button id="toggleFullscreen">Fullscreen</button><br><br>
+          <b>Rain Speed</b>
+          <div class="rain-speed-container">
+            <button id="speedBtn1">1</button>
+            <button id="speedBtn2">2</button>
+            <button id="speedBtn3" class="active">3</button>
+            <button id="speedBtn4">4</button>
+            <button id="speedBtn5">5</button>
+          </div>
+          <div style="display: grid; padding-bottom: 20px;">
+            <span><b>Rain color</b></span>
+            <div class="dropdown">
+              <select id="colorDropdown" class="select-style">
+                <option>Blue</option>
+                <option>Green</option>
+                <option>Red</option>
+                <option>Pink</option>
+                <option>Yellow</option>
+              </select>
+            </div>
+          </div>
+          <div style="display: grid;">
+            <span><b>Rain Font</b></span>
+            <div class="dropdown">
+              <select id="fontDropdown" class="select-style">
+                <option>Mono</option>
+                <option>Chicago</option>
+                <option>Matrix Code</option>
+                <option>Courier New</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  <script type="module" src="assets/js/bluerain.js"></script>
 </body>
 
 </html>

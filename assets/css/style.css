@@ -1,27 +1,72 @@
 @font-face {
-  font-family: 'Chicago Plain';
+  font-family: "Chicago Plain";
   font-style: normal;
   font-weight: normal;
-  src: local('Chicago Plain'), url('../fonts/Chicago.woff') format('woff');
+  src: local("Chicago Plain"), url("../fonts/Chicago.woff") format("woff");
 }
 
 @font-face {
-  font-family: 'Matrix Code NFI';
+  font-family: "Matrix Code NFI";
   font-style: normal;
   font-weight: normal;
-  src: local('Matrix Code NFI'), url('../fonts/matrix code nfi.woff') format('woff');
+  src: local("Matrix Code NFI"),
+    url("../fonts/matrix code nfi.woff") format("woff");
 }
 
 * {
   margin: 0;
-  padding: 0
+  padding: 0;
 }
 
 body {
-  background: #000;
+  background: #000 !important;
+  overflow: hidden;
 }
 
 canvas {
   display: block;
   user-select: none;
+}
+
+.corner-buttons {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  transition: opacity 0.5s ease;
+}
+
+.corner-buttons.fade-out {
+  opacity: 0;
+}
+
+.corner-buttons.fade-in {
+  opacity: 1;
+}
+
+.dialog-style {
+  position: fixed;
+  inset: 0px;
+  width: 400px;
+  margin: auto;
+}
+
+.body-style {
+  padding: 20px;
+}
+
+.transparent-bg {
+  background-color: #000000bd !important;
+}
+
+.rain-speed-container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.rain-speed-container button {
+  width: 50px;
+}
+
+.select-style {
+  width: 150px;
 }

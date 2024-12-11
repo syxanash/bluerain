@@ -1,17 +1,32 @@
-import Util from './util.js';
+const ws = new WebSocket(
+  "wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post"
+);
 
+const cornerButtons = document.querySelector(".corner-buttons");
+const dialog = document.querySelector("dialog");
+const showButton = document.getElementById("showSettings");
+const closeButton = document.getElementById("closeButton");
+const toggleFullscreenButton = document.getElementById("toggleFullscreen");
+const pauseButton = document.getElementById("pauseButton");
+const showEmojisButton = document.getElementById("showEmojisButton");
+const toggleTextShadowButton = document.getElementById(
+  "toggleTextShadowButton"
+);
+const fontDropdown = document.getElementById("fontDropdown");
+const colorDropdown = document.getElementById("colorDropdown");
+
+let cornerButtonsTimeout;
 let pauseAnimation = false;
 
-const colors = {
-  r: "#ff0a0a", // red
-  b: "#0ae2ff", // blue
-  g: "#0aff0a", // green
-  y: "#ffff0a", // yellow
-  p: "#ff0ac6", // pink
-};
+const colors = [
+  "#0ae2ff", // blue
+  "#0aff0a", // green
+  "#ff0a0a", // red
+  "#ff0ac6", // pink
+  "#ffff0a", // yellow
+];
 
-let rainColorTouch = 1;
-let rainColor = colors.b;
+let rainColor = colors[0];
 
 const animationSpeed = [5, 10, 20, 30, 60];
 let choosenSpeed = animationSpeed[2];
@@ -23,8 +38,13 @@ let previousTime = startTime;
 let currentTime = 0;
 let deltaTime = 0;
 
-const rainFonts = ["monospace", "Chicago Plain", "Matrix Code NFI", "Courier New"];
-let rainFontNumber = 0;
+const rainFonts = [
+  "monospace",
+  "Chicago Plain",
+  "Matrix Code NFI",
+  "Courier New",
+];
+
 let showEmojis = true;
 let showTextShadow = false;
 
@@ -37,15 +57,16 @@ canvas.height = window.innerHeight;
 const fontSize = 17,
   columns = Math.floor(canvas.width / fontSize);
 
-ctx.font = `${fontSize}px ${rainFonts[rainFontNumber]}`;
+ctx.font = `${fontSize}px ${rainFonts[0]}`;
 
 const drops = Array(columns).fill(1);
 const skeets = Array(columns).fill("");
 const skeetsIndex = Array(columns).fill(0);
 
-const sanitizeForEmojis = (string) => [...new Intl.Segmenter().segment(string)].map(x => x.segment);
+const sanitizeForEmojis = (string) =>
+  [...new Intl.Segmenter().segment(string)].map((x) => x.segment);
 
-const stripEmojis = (str) => str.replace(/\p{Emoji}/gu, '');
+const stripEmojis = (str) => str.replace(/\p{Emoji}/gu, "");
 
 const writeCharacter = (color, character, x, y) => {
   if (showTextShadow) {
@@ -58,7 +79,30 @@ const writeCharacter = (color, character, x, y) => {
     ctx.fillStyle = color;
     ctx.fillText(character, x, y);
   }
-};
+}
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const newColumns = Math.floor(canvas.width / fontSize);
+
+  const oldDrops = [...drops];
+  const oldSkeets = [...skeets];
+  const oldSkeetsIndex = [...skeetsIndex];
+
+  drops.length = newColumns;
+  skeets.length = newColumns;
+  skeetsIndex.length = newColumns;
+
+  for (let i = 0; i < newColumns; i++) {
+    drops[i] = oldDrops[i] || 1;
+    skeets[i] = oldSkeets[i] || "";
+    skeetsIndex[i] = oldSkeetsIndex[i] || 0;
+  }
+
+  ctx.font = `${fontSize}px ${rainFonts[fontDropdown.selectedIndex]}`;
+}
 
 function animateRain() {
   // Add fade effect to the canvas
@@ -67,7 +111,9 @@ function animateRain() {
 
   for (let i = 0; i < drops.length; i++) {
     if (i < skeets.length) {
-      const characters = showEmojis ? sanitizeForEmojis(skeets[i]) : stripEmojis(skeets[i]);
+      const characters = showEmojis
+        ? sanitizeForEmojis(skeets[i])
+        : stripEmojis(skeets[i]);
       const character = characters[skeetsIndex[i]];
 
       if (character) {
@@ -78,7 +124,12 @@ function animateRain() {
         if (drops[i] >= 2) {
           const oldCharacter = characters[skeetsIndex[i] - 1];
           if (oldCharacter) {
-            writeCharacter(rainColor, oldCharacter, i * fontSize, (drops[i] - 1) * fontSize);
+            writeCharacter(
+              rainColor,
+              oldCharacter,
+              i * fontSize,
+              (drops[i] - 1) * fontSize
+            );
           }
         }
 
@@ -88,7 +139,12 @@ function animateRain() {
 
       if (drops[i] * fontSize > canvas.height) {
         // color the last character on the grid otherwise they stay white
-        writeCharacter(rainColor, character, i * fontSize, (drops[i] - 1) * fontSize);
+        writeCharacter(
+          rainColor,
+          character,
+          i * fontSize,
+          (drops[i] - 1) * fontSize
+        );
 
         drops[i] = 1;
       }
@@ -109,8 +165,7 @@ function loop(timestamp) {
   if (deltaTime >= animationInterval) {
     previousTime = currentTime - (deltaTime % animationInterval);
 
-    if (!pauseAnimation)
-      animateRain();
+    if (!pauseAnimation) animateRain();
   }
 
   // Request the next frame
@@ -129,10 +184,23 @@ function addWord(word) {
   }
 }
 
-// WebSocket connection for live words
-const ws = new WebSocket(
-  "wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post"
-);
+function toggleActiveButton(button, state) {
+  if (state) {
+    button.classList.add("active");
+  } else {
+    button.classList.remove("active");
+  }
+}
+
+function hideButtons() {
+  cornerButtons.classList.remove("fade-in");
+  cornerButtons.classList.add("fade-out");
+}
+
+function showButtons() {
+  cornerButtons.classList.remove("fade-out");
+  cornerButtons.classList.add("fade-in");
+}
 
 ws.addEventListener("message", async (event) => {
   if (pauseAnimation) return;
@@ -143,45 +211,85 @@ ws.addEventListener("message", async (event) => {
   }
 });
 
-// Adjust canvas size on window resize
-window.onresize = () => { if (!Util.isMobile() ) location.reload(); }
+window.onresize = () => {
+  resizeCanvas();
+};
 
-// Keyboard and touch controls
-addEventListener("keydown", (event) => {
-  if (event.code === "Space") pauseAnimation = !pauseAnimation;
+document.addEventListener("mousemove", () => {
+  clearTimeout(cornerButtonsTimeout);
 
-  if (animationSpeed[event.key - 1]) {
-    choosenSpeed = animationSpeed[event.key - 1];
-    animationInterval = 1000 / choosenSpeed;
-  }
+  showButtons();
 
-  if (colors[event.key.toLowerCase()]) rainColor = colors[event.key.toLowerCase()];
+  cornerButtonsTimeout = setTimeout(hideButtons, 1500);
+});
 
-  if (event.code === "KeyE") showEmojis = !showEmojis;
+if (showEmojis) showEmojisButton.classList.add("active");
 
-  if (event.code === "KeyS") showTextShadow = !showTextShadow;
+toggleTextShadowButton.addEventListener("click", () => {
+  showTextShadow = !showTextShadow;
+  toggleActiveButton(toggleTextShadowButton, showTextShadow);
+});
 
-  if (event.code === "KeyF") {
-    rainFontNumber = (rainFontNumber + 1) % rainFonts.length;
-    ctx.font = `${fontSize}px ${rainFonts[rainFontNumber]}`;
+showEmojisButton.addEventListener("click", () => {
+  showEmojis = !showEmojis;
+  toggleActiveButton(showEmojisButton, showEmojis);
+});
+
+toggleFullscreenButton.addEventListener("click", () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+    dialog.close();
+
+    toggleActiveButton(toggleFullscreenButton, true);
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen();
+    toggleActiveButton(toggleFullscreenButton, false);
   }
 });
 
-addEventListener("touchstart", () => {
-  rainColorTouch = (rainColorTouch + 1) % Object.keys(colors).length;
-  rainColor = colors[Object.keys(colors)[rainColorTouch]];
+document.querySelectorAll("button[id^='speedBtn']").forEach((speedButton) => {
+  speedButton.addEventListener("click", (event) => {
+    const buttonNumber = event.target.id.match(/\d+$/)?.[0];
+
+    if (animationSpeed[buttonNumber - 1]) {
+      choosenSpeed = animationSpeed[buttonNumber - 1];
+      animationInterval = 1000 / choosenSpeed;
+    }
+
+    document.querySelectorAll("button[id^='speedBtn']").forEach((button) => {
+      button.classList.remove("active");
+    });
+
+    speedButton.classList.add("active");
+  });
 });
 
-const helpText = `%cKEYBOARD CONTROLS:
-SPACE - pause/play animation
-1, 2, 3, 4, 5 - change rain speed (3 default)
-G, R, B, Y, P - change rain color (green, red, blue, yellow, pink)
-E - toggle show/hide emojis
-F - change rain font
-S - toggle text shadow (might slow down your browser!)
-`;
+pauseButton.addEventListener("click", () => {
+  pauseAnimation = !pauseAnimation;
+  toggleActiveButton(pauseButton, pauseAnimation);
+});
 
-console.log(helpText, "font-size: small");
+fontDropdown.addEventListener("change", () => {
+  const selectedFont = fontDropdown.selectedIndex;
+
+  if (rainFonts[selectedFont])
+    ctx.font = `${fontSize}px ${rainFonts[selectedFont]}`;
+});
+
+colorDropdown.addEventListener("change", () => {
+  const selectedColor = colorDropdown.selectedIndex;
+
+  if (colors[selectedColor]) rainColor = colors[selectedColor];
+});
+
+showButton.addEventListener("click", () => {
+  dialog.showModal();
+});
+
+closeButton.addEventListener("click", () => {
+  dialog.close();
+});
+
 console.log("%chttps://github.com/syxanash/bluerain", "font-size: medium");
 
 requestAnimationFrame(loop);
