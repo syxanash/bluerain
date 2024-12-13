@@ -106,7 +106,7 @@ function resizeCanvas() {
 
 function animateRain() {
   // Add fade effect to the canvas
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.06)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   for (let i = 0; i < drops.length; i++) {
