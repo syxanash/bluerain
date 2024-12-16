@@ -223,10 +223,6 @@ ws.addEventListener("message", async (event) => {
     const postId = message?.commit.rkey;
     const postUrl = `https://bsky.app/profile/${did}/post/${postId}`;
 
-    // if (message?.commit.record.text.split(' ').some(item => item.toLowerCase() === '#nsfw')) {
-    //   debugger;
-    // }
-
     addPost(postMessage, postUrl);
   }
 });
