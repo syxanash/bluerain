@@ -301,11 +301,12 @@ colorDropdown.addEventListener("change", () => {
 canvas.addEventListener("mousedown", function (e) {
   let rect = canvas.getBoundingClientRect();
   let x = e.clientX - rect.left;
+  const gridColumns = Math.floor(canvas.width / fontSize)
 
   const skeetMessageSpan = document.getElementById("skeetMessage");
   const skeetUrlSpan = document.getElementById("skeetUrl");
 
-  const selectedColumn = Math.floor(x / Math.floor(canvas.width / columns));
+  const selectedColumn = Math.floor(x / Math.floor(canvas.width / gridColumns));
 
   if (skeets[selectedColumn]) {
     skeetMessageSpan.innerText = skeets[selectedColumn];
