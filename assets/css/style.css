@@ -105,6 +105,14 @@ canvas {
   hyphens: auto;
 }
 
+.skeet-url-link a {
+  color: #0ae2ff;
+}
+
+.skeet-url-link a:visited {
+  color: #c60aff;
+}
+
 .credits {
   position: absolute;
   right: 10px;
