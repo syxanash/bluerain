@@ -13,6 +13,21 @@
     url("../fonts/matrix code nfi.woff") format("woff");
 }
 
+@font-face {
+  font-family: 'DatCub-Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: local("DatCub-Bold"), url("../fonts/DatCub-Bold.woff") format('woff');
+}
+
+@font-face {
+  font-family: 'WhiteRabbit';
+  font-weight: normal;
+  font-style: normal;
+
+  src: local("WhiteRabbit"), url("../fonts/WhiteRabbit.woff") format('woff');
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -78,4 +93,10 @@ canvas {
 
 .select-style {
   width: 150px;
+}
+
+.credits {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 }

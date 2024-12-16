@@ -43,6 +43,8 @@ const rainFonts = [
   "Chicago Plain",
   "Matrix Code NFI",
   "Courier New",
+  "DatCub-Bold",
+  "WhiteRabbit"
 ];
 
 let showEmojis = true;
