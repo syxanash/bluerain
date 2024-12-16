@@ -3,9 +3,11 @@ const ws = new WebSocket(
 );
 
 const cornerButtons = document.querySelector(".corner-buttons");
-const dialog = document.querySelector("dialog");
+const settingsDialog = document.getElementById("settings-dialog");
+const skeetDialog = document.getElementById("skeet-dialog");
 const showButton = document.getElementById("showSettings");
-const closeButton = document.getElementById("closeButton");
+const settingsCloseButton = document.getElementById("settingsCloseButton");
+const skeetCloseButton = document.getElementById("skeetCloseButton");
 const toggleFullscreenButton = document.getElementById("toggleFullscreen");
 const pauseButton = document.getElementById("pauseButton");
 const showEmojisButton = document.getElementById("showEmojisButton");
@@ -63,6 +65,7 @@ ctx.font = `${fontSize}px ${rainFonts[0]}`;
 
 const drops = Array(columns).fill(1);
 const skeets = Array(columns).fill("");
+const skeetsUrl = Array(columns).fill("");
 const skeetsIndex = Array(columns).fill(0);
 
 const sanitizeForEmojis = (string) =>
@@ -91,15 +94,18 @@ function resizeCanvas() {
 
   const oldDrops = [...drops];
   const oldSkeets = [...skeets];
+  const oldSkeetsUrl = [...skeetsUrl];
   const oldSkeetsIndex = [...skeetsIndex];
 
   drops.length = newColumns;
   skeets.length = newColumns;
+  skeetsUrl.length = newColumns;
   skeetsIndex.length = newColumns;
 
   for (let i = 0; i < newColumns; i++) {
     drops[i] = oldDrops[i] || 1;
     skeets[i] = oldSkeets[i] || "";
+    skeetsUrl[i] = oldSkeetsUrl[i] || "";
     skeetsIndex[i] = oldSkeetsIndex[i] || 0;
   }
 
@@ -174,10 +180,11 @@ function loop(timestamp) {
   requestAnimationFrame(loop);
 }
 
-function addWord(word) {
+function addPost(postMessage, postUrl) {
   for (let j = 0; j < drops.length; j++) {
     if (skeetsIndex[j] === 0 && skeets[j] === "") {
-      skeets[j] = word;
+      skeets[j] = postMessage;
+      skeetsUrl[j] = postUrl;
       skeetsIndex[j] = 0;
       drops[j] = 1;
 
@@ -209,7 +216,13 @@ ws.addEventListener("message", async (event) => {
 
   const message = JSON.parse(event.data);
   if (message?.commit && message?.commit.operation === "create") {
-    addWord(message?.commit.record.text);
+    const postMessage = message?.commit.record.text;
+
+    const did = message?.did;
+    const postId = message?.commit.rkey;
+    const postUrl = `https://bsky.app/profile/${did}/post/${postId}`;
+
+    addPost(postMessage, postUrl);
   }
 });
 
@@ -240,7 +253,7 @@ showEmojisButton.addEventListener("click", () => {
 toggleFullscreenButton.addEventListener("click", () => {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen();
-    dialog.close();
+    settingsDialog.close();
 
     toggleActiveButton(toggleFullscreenButton, true);
   } else if (document.exitFullscreen) {
@@ -284,12 +297,33 @@ colorDropdown.addEventListener("change", () => {
   if (colors[selectedColor]) rainColor = colors[selectedColor];
 });
 
-showButton.addEventListener("click", () => {
-  dialog.showModal();
+canvas.addEventListener("mousedown", function (e) {
+  let rect = canvas.getBoundingClientRect();
+  let x = e.clientX - rect.left;
+
+  const skeetMessageSpan = document.getElementById("skeetMessage");
+  const skeetUrlSpan = document.getElementById("skeetUrl");
+
+  const selectedColumn = Math.floor(x / Math.floor(canvas.width / columns));
+
+  if (skeets[selectedColumn]) {
+    skeetMessageSpan.innerText = skeets[selectedColumn];
+    skeetUrlSpan.innerHTML = `<a href="${skeetsUrl[selectedColumn]}" target="_blank">${skeetsUrl[selectedColumn]}</a>`;
+
+    skeetDialog.showModal();
+  }
 });
 
-closeButton.addEventListener("click", () => {
-  dialog.close();
+showButton.addEventListener("click", () => {
+  settingsDialog.showModal();
+});
+
+settingsCloseButton.addEventListener("click", () => {
+  settingsDialog.close();
+});
+
+skeetCloseButton.addEventListener("click", () => {
+  skeetDialog.close();
 });
 
 console.log("%chttps://github.com/syxanash/bluerain", "font-size: medium");

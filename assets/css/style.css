@@ -44,6 +44,7 @@ canvas {
 }
 
 .corner-buttons {
+  font-size: 1.2rem;
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -93,6 +94,15 @@ canvas {
 
 .select-style {
   width: 150px;
+}
+
+.skeet-message-dialog {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 
 .credits {

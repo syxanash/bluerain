@@ -38,14 +38,32 @@
     <button id="showSettings">Settings</button>
     <button id="pauseButton">Pause</button>
   </div>
-  <dialog class="dialog-style" style="background-color: #00000045 !important;">
+  <dialog id="skeet-dialog" class="dialog-style" style="background-color: #00000045 !important;">
+    <div class="window active" style="background-color: #00000045 !important;">
+      <div class="title-bar">
+        <div class="title-bar-text">
+          Post
+        </div>
+        <div class="title-bar-buttons">
+          <button id="skeetCloseButton" data-close=""></button>
+        </div>
+      </div>
+      <div class="window-body" style="background-color: #00000045 !important;">
+        <div class="body-style skeet-message-dialog" style="background-color: #00000045 !important;">
+          <span id="skeetMessage"></span><br><br>
+          <span id="skeetUrl"></span>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="settings-dialog" class="dialog-style" style="background-color: #00000045 !important;">
     <div class="window active" style="background-color: #00000045 !important;">
       <div class="title-bar">
         <div class="title-bar-text">
           Settings
         </div>
         <div class="title-bar-buttons">
-          <button id="closeButton" data-close=""></button>
+          <button id="settingsCloseButton" data-close=""></button>
         </div>
       </div>
       <div class="window-body" style="background-color: #00000045 !important;">
