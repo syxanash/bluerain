@@ -1,8 +1,11 @@
-@font-face {
-  font-family: "Chicago Plain";
-  font-style: normal;
-  font-weight: normal;
-  src: local("Chicago Plain"), url("../fonts/Chicago.woff") format("woff");
+@font-face{
+  font-family: "Chicago";
+  src: url("../fonts/Chicago.woff")format("woff"),
+      url("../fonts/Chicago.woff2")format("woff2"),
+      url("../fonts/Chicago.ttf")format("truetype");
+  font-weight:normal;
+  font-style:normal;
+  font-display:swap;
 }
 
 @font-face {
@@ -26,6 +29,15 @@
   font-style: normal;
 
   src: local("WhiteRabbit"), url("../fonts/WhiteRabbit.woff") format('woff');
+}
+
+@font-face{
+  font-family: "Space Mono";
+  src: url("../fonts/Space-Mono.woff")format("woff"),
+      url("../fonts/Space-Mono.woff2")format("woff2");
+  font-weight:normal;
+  font-style:normal;
+  font-display:swap;
 }
 
 * {

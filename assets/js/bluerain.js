@@ -42,11 +42,12 @@ let deltaTime = 0;
 
 const rainFonts = [
   "monospace",
-  "Chicago Plain",
+  "Chicago",
   "Matrix Code NFI",
   "Courier New",
   "DatCub-Bold",
-  "WhiteRabbit"
+  "WhiteRabbit",
+  "Space Mono"
 ];
 
 let showEmojis = true;
@@ -221,6 +222,10 @@ ws.addEventListener("message", async (event) => {
     const did = message?.did;
     const postId = message?.commit.rkey;
     const postUrl = `https://bsky.app/profile/${did}/post/${postId}`;
+
+    // if (message?.commit.record.text.split(' ').some(item => item.toLowerCase() === '#nsfw')) {
+    //   debugger;
+    // }
 
     addPost(postMessage, postUrl);
   }
