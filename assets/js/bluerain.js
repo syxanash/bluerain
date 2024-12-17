@@ -65,9 +65,7 @@ const fontSize = 17,
 ctx.font = `${fontSize}px ${rainFonts[0]}`;
 
 const drops = Array(columns).fill(1);
-const skeets = Array(columns).fill("");
-const skeetsUrl = Array(columns).fill("");
-const skeetsIndex = Array(columns).fill(0);
+const skeets = Array(columns).fill({ post: '', url: '', index: 0 });
 
 const sanitizeForEmojis = (string) =>
   [...new Intl.Segmenter().segment(string)].map((x) => x.segment);
@@ -95,19 +93,26 @@ function resizeCanvas() {
 
   const oldDrops = [...drops];
   const oldSkeets = [...skeets];
-  const oldSkeetsUrl = [...skeetsUrl];
-  const oldSkeetsIndex = [...skeetsIndex];
 
   drops.length = newColumns;
   skeets.length = newColumns;
-  skeetsUrl.length = newColumns;
-  skeetsIndex.length = newColumns;
 
   for (let i = 0; i < newColumns; i++) {
     drops[i] = oldDrops[i] || 1;
-    skeets[i] = oldSkeets[i] || "";
-    skeetsUrl[i] = oldSkeetsUrl[i] || "";
-    skeetsIndex[i] = oldSkeetsIndex[i] || 0;
+
+    if (oldSkeets[i] === undefined) {
+      skeets[i] = {
+        post: '',
+        url: '',
+        index: 0
+      }
+    } else {
+      skeets[i] = {
+        post: oldSkeets[i].post,
+        url: oldSkeets[i].url,
+        index: oldSkeets[i].index,
+      }
+    }
   }
 
   ctx.font = `${fontSize}px ${rainFonts[fontDropdown.selectedIndex]}`;
@@ -121,9 +126,9 @@ function animateRain() {
   for (let i = 0; i < drops.length; i++) {
     if (i < skeets.length) {
       const characters = showEmojis
-        ? sanitizeForEmojis(skeets[i])
-        : stripEmojis(skeets[i]);
-      const character = characters[skeetsIndex[i]];
+        ? sanitizeForEmojis(skeets[i].post)
+        : stripEmojis(skeets[i].post);
+      const character = characters[skeets[i].index];
 
       if (character) {
         // Render the current character in white
@@ -131,7 +136,7 @@ function animateRain() {
 
         // Render the previous character in the rain color if applicable
         if (drops[i] >= 2) {
-          const oldCharacter = characters[skeetsIndex[i] - 1];
+          const oldCharacter = characters[skeets[i].index - 1];
           if (oldCharacter) {
             writeCharacter(
               rainColor,
@@ -143,7 +148,7 @@ function animateRain() {
         }
 
         drops[i]++;
-        skeetsIndex[i]++;
+        skeets[i].index++;
       }
 
       if (drops[i] * fontSize > canvas.height) {
@@ -158,9 +163,8 @@ function animateRain() {
         drops[i] = 1;
       }
 
-      if (skeetsIndex[i] >= characters.length) {
-        skeetsIndex[i] = 0;
-        skeets[i] = "";
+      if (skeets[i].index >= characters.length) {
+        skeets[i] = { post: '', url: '', index: 0 };
         drops[i] = 1;
       }
     }
@@ -183,10 +187,8 @@ function loop(timestamp) {
 
 function addPost(postMessage, postUrl) {
   for (let j = 0; j < drops.length; j++) {
-    if (skeetsIndex[j] === 0 && skeets[j] === "") {
-      skeets[j] = postMessage;
-      skeetsUrl[j] = postUrl;
-      skeetsIndex[j] = 0;
+    if (skeets[j].index === 0 && skeets[j].post === "") {
+      skeets[j] = { post: postMessage, url: postUrl, index: 0 };
       drops[j] = 1;
 
       break;
@@ -308,9 +310,9 @@ canvas.addEventListener("mousedown", function (e) {
 
   const selectedColumn = Math.floor(x / Math.floor(canvas.width / gridColumns));
 
-  if (skeets[selectedColumn]) {
-    skeetMessageSpan.innerText = skeets[selectedColumn];
-    skeetUrlSpan.innerHTML = `<a href="${skeetsUrl[selectedColumn]}" target="_blank">${skeetsUrl[selectedColumn]}</a>`;
+  if (skeets[selectedColumn].post) {
+    skeetMessageSpan.innerText = skeets[selectedColumn].post;
+    skeetUrlSpan.innerHTML = `<a href="${skeets[selectedColumn].url}" target="_blank">${skeets[selectedColumn].url}</a>`;
 
     skeetDialog.showModal();
   }
