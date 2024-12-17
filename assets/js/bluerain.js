@@ -64,8 +64,7 @@ const fontSize = 17,
 
 ctx.font = `${fontSize}px ${rainFonts[0]}`;
 
-const drops = Array(columns).fill(1);
-const skeets = Array(columns).fill({ post: '', url: '', index: 0 });
+const skeets = Array(columns).fill({ post: '', url: '', index: 0, drop: 1 });
 
 const sanitizeForEmojis = (string) =>
   [...new Intl.Segmenter().segment(string)].map((x) => x.segment);
@@ -91,26 +90,24 @@ function resizeCanvas() {
 
   const newColumns = Math.floor(canvas.width / fontSize);
 
-  const oldDrops = [...drops];
   const oldSkeets = [...skeets];
 
-  drops.length = newColumns;
   skeets.length = newColumns;
 
   for (let i = 0; i < newColumns; i++) {
-    drops[i] = oldDrops[i] || 1;
-
     if (oldSkeets[i] === undefined) {
       skeets[i] = {
         post: '',
         url: '',
-        index: 0
+        index: 0,
+        drop: 1
       }
     } else {
       skeets[i] = {
         post: oldSkeets[i].post,
         url: oldSkeets[i].url,
         index: oldSkeets[i].index,
+        drop: oldSkeets[i].drop
       }
     }
   }
@@ -123,50 +120,47 @@ function animateRain() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.06)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = 0; i < drops.length; i++) {
-    if (i < skeets.length) {
-      const characters = showEmojis
-        ? sanitizeForEmojis(skeets[i].post)
-        : stripEmojis(skeets[i].post);
-      const character = characters[skeets[i].index];
+  for (let i = 0; i < skeets.length; i++) {
+    const characters = showEmojis
+      ? sanitizeForEmojis(skeets[i].post)
+      : stripEmojis(skeets[i].post);
+    const character = characters[skeets[i].index];
 
-      if (character) {
-        // Render the current character in white
-        writeCharacter("#ffffff", character, i * fontSize, drops[i] * fontSize);
+    if (character) {
+      // Render the current character in white
+      writeCharacter("#ffffff", character, i * fontSize, skeets[i].drop * fontSize);
 
-        // Render the previous character in the rain color if applicable
-        if (drops[i] >= 2) {
-          const oldCharacter = characters[skeets[i].index - 1];
-          if (oldCharacter) {
-            writeCharacter(
-              rainColor,
-              oldCharacter,
-              i * fontSize,
-              (drops[i] - 1) * fontSize
-            );
-          }
+      // Render the previous character in the rain color if applicable
+      if (skeets[i].drop >= 2) {
+        const oldCharacter = characters[skeets[i].index - 1];
+        if (oldCharacter) {
+          writeCharacter(
+            rainColor,
+            oldCharacter,
+            i * fontSize,
+            (skeets[i].drop - 1) * fontSize
+          );
         }
-
-        drops[i]++;
-        skeets[i].index++;
       }
 
-      if (drops[i] * fontSize > canvas.height) {
-        // color the last character on the grid otherwise they stay white
-        writeCharacter(
-          rainColor,
-          character,
-          i * fontSize,
-          (drops[i] - 1) * fontSize
-        );
+      skeets[i].drop++;
+      skeets[i].index++;
+    }
 
-        drops[i] = 1;
-      }
+    if (skeets[i].drop * fontSize > canvas.height) {
+      // color the last character on the grid otherwise they stay white
+      writeCharacter(
+        rainColor,
+        character,
+        i * fontSize,
+        (skeets[i].drop - 1) * fontSize
+      );
 
-      if (skeets[i].index >= characters.length) {
-        skeets[i] = { post: '', url: '', index: 0 };
-        drops[i] = 1;
-      }
+      skeets[i].drop = 1;
+    }
+
+    if (skeets[i].index >= characters.length) {
+      skeets[i] = { post: '', url: '', index: 0, drop: 1 };
     }
   }
 }
@@ -186,10 +180,9 @@ function loop(timestamp) {
 }
 
 function addPost(postMessage, postUrl) {
-  for (let j = 0; j < drops.length; j++) {
+  for (let j = 0; j < skeets.length; j++) {
     if (skeets[j].index === 0 && skeets[j].post === "") {
-      skeets[j] = { post: postMessage, url: postUrl, index: 0 };
-      drops[j] = 1;
+      skeets[j] = { post: postMessage, url: postUrl, index: 0, drop: 1 };
 
       break;
     }
