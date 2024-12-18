@@ -28,8 +28,10 @@ const colors = [
   "#0ae2ff", // blue
   "#0aff0a", // green
   "#ff0a0a", // red
+  "#ff700a", // orange
   "#ff0ac6", // pink
   "#ffff0a", // yellow
+  "#ffffff", // white
 ];
 
 let rainColor = colors[0];
