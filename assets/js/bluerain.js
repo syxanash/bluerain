@@ -64,10 +64,7 @@ const fontSize = 17,
 
 ctx.font = `${fontSize}px ${rainFonts[0]}`;
 
-const drops = Array(columns).fill(1);
-const skeets = Array(columns).fill("");
-const skeetsUrl = Array(columns).fill("");
-const skeetsIndex = Array(columns).fill(0);
+const skeets = Array(columns).fill({ post: '', url: '', index: 0, drop: 1 });
 
 const sanitizeForEmojis = (string) =>
   [...new Intl.Segmenter().segment(string)].map((x) => x.segment);
@@ -93,21 +90,26 @@ function resizeCanvas() {
 
   const newColumns = Math.floor(canvas.width / fontSize);
 
-  const oldDrops = [...drops];
   const oldSkeets = [...skeets];
-  const oldSkeetsUrl = [...skeetsUrl];
-  const oldSkeetsIndex = [...skeetsIndex];
 
-  drops.length = newColumns;
   skeets.length = newColumns;
-  skeetsUrl.length = newColumns;
-  skeetsIndex.length = newColumns;
 
   for (let i = 0; i < newColumns; i++) {
-    drops[i] = oldDrops[i] || 1;
-    skeets[i] = oldSkeets[i] || "";
-    skeetsUrl[i] = oldSkeetsUrl[i] || "";
-    skeetsIndex[i] = oldSkeetsIndex[i] || 0;
+    if (oldSkeets[i] === undefined) {
+      skeets[i] = {
+        post: '',
+        url: '',
+        index: 0,
+        drop: 1
+      }
+    } else {
+      skeets[i] = {
+        post: oldSkeets[i].post,
+        url: oldSkeets[i].url,
+        index: oldSkeets[i].index,
+        drop: oldSkeets[i].drop
+      }
+    }
   }
 
   ctx.font = `${fontSize}px ${rainFonts[fontDropdown.selectedIndex]}`;
@@ -118,51 +120,47 @@ function animateRain() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.06)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = 0; i < drops.length; i++) {
-    if (i < skeets.length) {
-      const characters = showEmojis
-        ? sanitizeForEmojis(skeets[i])
-        : stripEmojis(skeets[i]);
-      const character = characters[skeetsIndex[i]];
+  for (let i = 0; i < skeets.length; i++) {
+    const characters = showEmojis
+      ? sanitizeForEmojis(skeets[i].post)
+      : stripEmojis(skeets[i].post);
+    const character = characters[skeets[i].index];
 
-      if (character) {
-        // Render the current character in white
-        writeCharacter("#ffffff", character, i * fontSize, drops[i] * fontSize);
+    if (character) {
+      // Render the current character in white
+      writeCharacter("#ffffff", character, i * fontSize, skeets[i].drop * fontSize);
 
-        // Render the previous character in the rain color if applicable
-        if (drops[i] >= 2) {
-          const oldCharacter = characters[skeetsIndex[i] - 1];
-          if (oldCharacter) {
-            writeCharacter(
-              rainColor,
-              oldCharacter,
-              i * fontSize,
-              (drops[i] - 1) * fontSize
-            );
-          }
+      // Render the previous character in the rain color if applicable
+      if (skeets[i].drop >= 2) {
+        const oldCharacter = characters[skeets[i].index - 1];
+        if (oldCharacter) {
+          writeCharacter(
+            rainColor,
+            oldCharacter,
+            i * fontSize,
+            (skeets[i].drop - 1) * fontSize
+          );
         }
-
-        drops[i]++;
-        skeetsIndex[i]++;
       }
 
-      if (drops[i] * fontSize > canvas.height) {
-        // color the last character on the grid otherwise they stay white
-        writeCharacter(
-          rainColor,
-          character,
-          i * fontSize,
-          (drops[i] - 1) * fontSize
-        );
+      skeets[i].drop++;
+      skeets[i].index++;
+    }
 
-        drops[i] = 1;
-      }
+    if (skeets[i].drop * fontSize > canvas.height) {
+      // color the last character on the grid otherwise they stay white
+      writeCharacter(
+        rainColor,
+        character,
+        i * fontSize,
+        (skeets[i].drop - 1) * fontSize
+      );
 
-      if (skeetsIndex[i] >= characters.length) {
-        skeetsIndex[i] = 0;
-        skeets[i] = "";
-        drops[i] = 1;
-      }
+      skeets[i].drop = 1;
+    }
+
+    if (skeets[i].index >= characters.length) {
+      skeets[i] = { post: '', url: '', index: 0, drop: 1 };
     }
   }
 }
@@ -182,12 +180,9 @@ function loop(timestamp) {
 }
 
 function addPost(postMessage, postUrl) {
-  for (let j = 0; j < drops.length; j++) {
-    if (skeetsIndex[j] === 0 && skeets[j] === "") {
-      skeets[j] = postMessage;
-      skeetsUrl[j] = postUrl;
-      skeetsIndex[j] = 0;
-      drops[j] = 1;
+  for (let j = 0; j < skeets.length; j++) {
+    if (skeets[j].index === 0 && skeets[j].post === "") {
+      skeets[j] = { post: postMessage, url: postUrl, index: 0, drop: 1 };
 
       break;
     }
@@ -308,9 +303,9 @@ canvas.addEventListener("mousedown", function (e) {
 
   const selectedColumn = Math.floor(x / Math.floor(canvas.width / gridColumns));
 
-  if (skeets[selectedColumn]) {
-    skeetMessageSpan.innerText = skeets[selectedColumn];
-    skeetUrlSpan.innerHTML = `<a href="${skeetsUrl[selectedColumn]}" target="_blank">${skeetsUrl[selectedColumn]}</a>`;
+  if (skeets[selectedColumn].post) {
+    skeetMessageSpan.innerText = skeets[selectedColumn].post;
+    skeetUrlSpan.innerHTML = `<a href="${skeets[selectedColumn].url}" target="_blank">${skeets[selectedColumn].url}</a>`;
 
     skeetDialog.showModal();
   }
