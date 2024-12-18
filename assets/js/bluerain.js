@@ -1,3 +1,5 @@
+import Util from './util.js';
+
 const ws = new WebSocket(
   "wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post"
 );
@@ -9,11 +11,13 @@ const showButton = document.getElementById("showSettings");
 const settingsCloseButton = document.getElementById("settingsCloseButton");
 const skeetCloseButton = document.getElementById("skeetCloseButton");
 const toggleFullscreenButton = document.getElementById("toggleFullscreen");
+const fullscreenButtonContainer = document.getElementById("fullscreenButtonContainer");
 const pauseButton = document.getElementById("pauseButton");
 const showEmojisButton = document.getElementById("showEmojisButton");
 const toggleTextShadowButton = document.getElementById(
   "toggleTextShadowButton"
 );
+const firefoxShadowWarning = document.getElementById("firefoxShadowWarning")
 const fontDropdown = document.getElementById("fontDropdown");
 const colorDropdown = document.getElementById("colorDropdown");
 
@@ -235,6 +239,8 @@ document.addEventListener("mousemove", () => {
 });
 
 if (showEmojis) showEmojisButton.classList.add("active");
+if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
+if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
 
 toggleTextShadowButton.addEventListener("click", () => {
   showTextShadow = !showTextShadow;
