@@ -28,7 +28,6 @@ const changeSound = new SoundControl('assets/sounds/change.mp3');
 const selectionSound = new SoundControl('assets/sounds/selection.mp3');
 
 let soundsEnabled = false;
-
 let cornerButtonsTimeout;
 let animationPaused = false;
 
@@ -225,14 +224,6 @@ function playActionSound(sound) {
       sound.play();
     }
   }
-}
-
-function isPlaying(audio) {
-  return audio
-    && audio.currentTime > 0
-    && !audio.paused
-    && !audio.ended
-    && audio.readyState > 2;
 }
 
 function toggleActiveButton(button, state) {
