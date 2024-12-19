@@ -289,7 +289,8 @@ toggleSoundButton.addEventListener('click', toggleSound);
 toggleTextShadowButton.addEventListener("click", () => {
   showTextShadow = !showTextShadow;
 
-  playActionSound(changeSound);
+  if (!animationPaused)
+    playActionSound(changeSound);
 
   toggleActiveButton(toggleTextShadowButton, showTextShadow);
 });
@@ -347,7 +348,8 @@ pauseButton.addEventListener("click", () => {
 fontDropdown.addEventListener("change", () => {
   const selectedFont = fontDropdown.selectedIndex;
 
-  playActionSound(changeSound);
+  if (!animationPaused)
+    playActionSound(changeSound);
 
   if (rainFonts[selectedFont])
     ctx.font = `${fontSize}px ${rainFonts[selectedFont]}`;
@@ -356,7 +358,8 @@ fontDropdown.addEventListener("change", () => {
 colorDropdown.addEventListener("change", () => {
   const selectedColor = colorDropdown.selectedIndex;
 
-  playActionSound(changeSound);
+  if (!animationPaused)
+    playActionSound(changeSound);
 
   if (colors[selectedColor]) rainColor = colors[selectedColor];
 });
