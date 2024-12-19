@@ -24,6 +24,7 @@ const colorDropdown = document.getElementById("colorDropdown");
 const toggleSoundButton = document.getElementById('toggleSound');
 
 const rainSound = new SoundControl('assets/sounds/rain.mp3', true);
+const pauseSound = new SoundControl('assets/sounds/paused.mp3');
 const changeSound = new SoundControl('assets/sounds/change.mp3');
 const selectionSound = new SoundControl('assets/sounds/selection.mp3');
 
@@ -327,6 +328,8 @@ pauseButton.addEventListener("click", () => {
     if (animationPaused) {
       if (rainSound.isPlaying()) {
         rainSound.stop();
+
+        playActionSound(pauseSound);
       }
     } else {
       rainSound.play();
