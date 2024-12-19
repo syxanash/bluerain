@@ -20,6 +20,12 @@ const toggleTextShadowButton = document.getElementById(
 const firefoxShadowWarning = document.getElementById("firefoxShadowWarning")
 const fontDropdown = document.getElementById("fontDropdown");
 const colorDropdown = document.getElementById("colorDropdown");
+const toggleSoundButton = document.getElementById('toggleSound') 
+
+const sound = new Audio();
+let isPlaying = false;
+sound.src = 'assets/sounds/rain.mp3';
+sound.loop = true;
 
 let cornerButtonsTimeout;
 let pauseAnimation = false;
@@ -195,6 +201,18 @@ function addPost(postMessage, postUrl) {
   }
 }
 
+function toggleSound() {
+  if (isPlaying) {
+    sound.pause();
+    toggleSoundButton.classList.remove("active");
+  } else {
+    sound.play();
+    toggleSoundButton.classList.add("active");
+  }
+
+  isPlaying = !isPlaying;
+}
+
 function toggleActiveButton(button, state) {
   if (state) {
     button.classList.add("active");
@@ -212,6 +230,10 @@ function showButtons() {
   cornerButtons.classList.remove("fade-out");
   cornerButtons.classList.add("fade-in");
 }
+
+if (showEmojis) showEmojisButton.classList.add("active");
+if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
+if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
 
 ws.addEventListener("message", async (event) => {
   if (pauseAnimation) return;
@@ -240,9 +262,7 @@ document.addEventListener("mousemove", () => {
   cornerButtonsTimeout = setTimeout(hideButtons, 1500);
 });
 
-if (showEmojis) showEmojisButton.classList.add("active");
-if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
-if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
+toggleSoundButton.addEventListener('click', toggleSound);
 
 toggleTextShadowButton.addEventListener("click", () => {
   showTextShadow = !showTextShadow;
