@@ -20,12 +20,17 @@ const toggleTextShadowButton = document.getElementById(
 const firefoxShadowWarning = document.getElementById("firefoxShadowWarning")
 const fontDropdown = document.getElementById("fontDropdown");
 const colorDropdown = document.getElementById("colorDropdown");
-const toggleSoundButton = document.getElementById('toggleSound') 
+const toggleSoundButton = document.getElementById('toggleSound');
 
-const sound = new Audio();
-let isPlaying = false;
-sound.src = 'assets/sounds/rain.mp3';
-sound.loop = true;
+const rainSound = new Audio();
+const selectionSound = new Audio();
+const changeSound = new Audio();
+
+let soundsEnabled = false;
+selectionSound.src = 'assets/sounds/selection.mp3';
+changeSound.src = 'assets/sounds/change.mp3';
+rainSound.src = 'assets/sounds/rain.mp3';
+rainSound.loop = true;
 
 let cornerButtonsTimeout;
 let pauseAnimation = false;
@@ -202,15 +207,35 @@ function addPost(postMessage, postUrl) {
 }
 
 function toggleSound() {
-  if (isPlaying) {
-    sound.pause();
+  if (soundsEnabled) {
+    rainSound.pause();
     toggleSoundButton.classList.remove("active");
   } else {
-    sound.play();
+    rainSound.play();
     toggleSoundButton.classList.add("active");
   }
 
-  isPlaying = !isPlaying;
+  soundsEnabled = !soundsEnabled;
+}
+
+function playChangeSound() {
+  if (soundsEnabled) {
+    if (isPlaying(changeSound)) {
+      changeSound.pause();
+      changeSound.currentTime = 0;
+      changeSound.play();
+    } else {
+      changeSound.play();
+    }
+  }
+}
+
+function isPlaying(audio) {
+  return audio
+    && audio.currentTime > 0
+    && !audio.paused
+    && !audio.ended
+    && audio.readyState > 2;
 }
 
 function toggleActiveButton(button, state) {
@@ -266,6 +291,9 @@ toggleSoundButton.addEventListener('click', toggleSound);
 
 toggleTextShadowButton.addEventListener("click", () => {
   showTextShadow = !showTextShadow;
+
+  playChangeSound();
+
   toggleActiveButton(toggleTextShadowButton, showTextShadow);
 });
 
@@ -311,12 +339,16 @@ pauseButton.addEventListener("click", () => {
 fontDropdown.addEventListener("change", () => {
   const selectedFont = fontDropdown.selectedIndex;
 
+  playChangeSound();
+
   if (rainFonts[selectedFont])
     ctx.font = `${fontSize}px ${rainFonts[selectedFont]}`;
 });
 
 colorDropdown.addEventListener("change", () => {
   const selectedColor = colorDropdown.selectedIndex;
+
+  playChangeSound();
 
   if (colors[selectedColor]) rainColor = colors[selectedColor];
 });
@@ -335,11 +367,17 @@ canvas.addEventListener("mousedown", function (e) {
     skeetMessageSpan.innerText = skeets[selectedColumn].post;
     skeetUrlSpan.innerHTML = `<a href="${skeets[selectedColumn].url}" target="_blank">${skeets[selectedColumn].url}</a>`;
 
+    if (soundsEnabled)
+      selectionSound.play();
+
     skeetDialog.showModal();
   }
 });
 
 showButton.addEventListener("click", () => {
+  if (soundsEnabled)
+    selectionSound.play();
+
   settingsDialog.showModal();
 });
 
