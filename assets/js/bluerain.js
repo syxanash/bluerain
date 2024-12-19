@@ -1,4 +1,5 @@
 import Util from './util.js';
+import SoundControl from './SoundContro.js';
 
 const ws = new WebSocket(
   "wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post"
@@ -22,15 +23,11 @@ const fontDropdown = document.getElementById("fontDropdown");
 const colorDropdown = document.getElementById("colorDropdown");
 const toggleSoundButton = document.getElementById('toggleSound');
 
-const rainSound = new Audio();
-const selectionSound = new Audio();
-const changeSound = new Audio();
+const rainSound = new SoundControl('assets/sounds/rain.mp3', true);
+const changeSound = new SoundControl('assets/sounds/change.mp3');
+const selectionSound = new SoundControl('assets/sounds/selection.mp3');
 
 let soundsEnabled = false;
-selectionSound.src = 'assets/sounds/selection.mp3';
-changeSound.src = 'assets/sounds/change.mp3';
-rainSound.src = 'assets/sounds/rain.mp3';
-rainSound.loop = true;
 
 let cornerButtonsTimeout;
 let animationPaused = false;
@@ -208,8 +205,7 @@ function addPost(postMessage, postUrl) {
 
 function toggleSound() {
   if (soundsEnabled) {
-    rainSound.pause();
-    rainSound.currentTime = 0;
+    rainSound.stop();
     toggleSoundButton.classList.remove("active");
   } else {
     if (!animationPaused)
@@ -220,14 +216,13 @@ function toggleSound() {
   soundsEnabled = !soundsEnabled;
 }
 
-function playChangeSound() {
+function playActionSound(sound) {
   if (soundsEnabled) {
-    if (isPlaying(changeSound)) {
-      changeSound.pause();
-      changeSound.currentTime = 0;
-      changeSound.play();
+    if (sound.isPlaying()) {
+      sound.stop();
+      sound.play();
     } else {
-      changeSound.play();
+      sound.play();
     }
   }
 }
@@ -294,7 +289,7 @@ toggleSoundButton.addEventListener('click', toggleSound);
 toggleTextShadowButton.addEventListener("click", () => {
   showTextShadow = !showTextShadow;
 
-  playChangeSound();
+  playActionSound(changeSound);
 
   toggleActiveButton(toggleTextShadowButton, showTextShadow);
 });
@@ -338,8 +333,8 @@ pauseButton.addEventListener("click", () => {
 
   if (soundsEnabled) {
     if (animationPaused) {
-      if (isPlaying(rainSound)) {
-        rainSound.pause();
+      if (rainSound.isPlaying()) {
+        rainSound.stop();
       }
     } else {
       rainSound.play();
@@ -352,7 +347,7 @@ pauseButton.addEventListener("click", () => {
 fontDropdown.addEventListener("change", () => {
   const selectedFont = fontDropdown.selectedIndex;
 
-  playChangeSound();
+  playActionSound(changeSound);
 
   if (rainFonts[selectedFont])
     ctx.font = `${fontSize}px ${rainFonts[selectedFont]}`;
@@ -361,7 +356,7 @@ fontDropdown.addEventListener("change", () => {
 colorDropdown.addEventListener("change", () => {
   const selectedColor = colorDropdown.selectedIndex;
 
-  playChangeSound();
+  playActionSound(changeSound);
 
   if (colors[selectedColor]) rainColor = colors[selectedColor];
 });
@@ -380,16 +375,14 @@ canvas.addEventListener("mousedown", function (e) {
     skeetMessageSpan.innerText = skeets[selectedColumn].post;
     skeetUrlSpan.innerHTML = `<a href="${skeets[selectedColumn].url}" target="_blank">${skeets[selectedColumn].url}</a>`;
 
-    if (soundsEnabled)
-      selectionSound.play();
+    playActionSound(selectionSound);
 
     skeetDialog.showModal();
   }
 });
 
 showButton.addEventListener("click", () => {
-  if (soundsEnabled)
-    selectionSound.play();
+  playActionSound(selectionSound);
 
   settingsDialog.showModal();
 });
