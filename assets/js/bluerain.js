@@ -334,8 +334,6 @@ document.querySelectorAll("button[id^='speedBtn']").forEach((speedButton) => {
 pauseButton.addEventListener("click", () => {
   pauseAnimation = !pauseAnimation;
 
-  playChangeSound();
-
   toggleActiveButton(pauseButton, pauseAnimation);
 });
 
