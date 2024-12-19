@@ -33,7 +33,7 @@ rainSound.src = 'assets/sounds/rain.mp3';
 rainSound.loop = true;
 
 let cornerButtonsTimeout;
-let pauseAnimation = false;
+let animationPaused = false;
 
 const colors = [
   "#0ae2ff", // blue
@@ -189,7 +189,7 @@ function loop(timestamp) {
   if (deltaTime >= animationInterval) {
     previousTime = currentTime - (deltaTime % animationInterval);
 
-    if (!pauseAnimation) animateRain();
+    if (!animationPaused) animateRain();
   }
 
   // Request the next frame
@@ -209,9 +209,11 @@ function addPost(postMessage, postUrl) {
 function toggleSound() {
   if (soundsEnabled) {
     rainSound.pause();
+    rainSound.currentTime = 0;
     toggleSoundButton.classList.remove("active");
   } else {
-    rainSound.play();
+    if (!animationPaused)
+      rainSound.play();
     toggleSoundButton.classList.add("active");
   }
 
@@ -261,7 +263,7 @@ if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
 if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
 
 ws.addEventListener("message", async (event) => {
-  if (pauseAnimation) return;
+  if (animationPaused) return;
 
   const message = JSON.parse(event.data);
   if (message?.commit && message?.commit.operation === "create") {
@@ -332,9 +334,19 @@ document.querySelectorAll("button[id^='speedBtn']").forEach((speedButton) => {
 });
 
 pauseButton.addEventListener("click", () => {
-  pauseAnimation = !pauseAnimation;
+  animationPaused = !animationPaused;
 
-  toggleActiveButton(pauseButton, pauseAnimation);
+  if (soundsEnabled) {
+    if (animationPaused) {
+      if (isPlaying(rainSound)) {
+        rainSound.pause();
+      }
+    } else {
+      rainSound.play();
+    }
+  }
+
+  toggleActiveButton(pauseButton, animationPaused);
 });
 
 fontDropdown.addEventListener("change", () => {
