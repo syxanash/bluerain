@@ -125,6 +125,20 @@ canvas {
   color: #c60aff;
 }
 
+.filter-input {
+  width: 100%;
+}
+
+.filtered-list {
+  margin-top: 20px;
+  display: grid;
+  grid-gap: 10px;
+}
+
+.filtered-word {
+  color: #0ae2ff;
+}
+
 .credits {
   position: absolute;
   right: 10px;
