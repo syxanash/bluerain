@@ -206,10 +206,13 @@ function addPost(postMessage, postUrl) {
 function toggleSound() {
   if (soundsEnabled) {
     rainSound.stop();
+    toggleSoundButton.innerText = "Play Rain Sound";
     toggleSoundButton.classList.remove("active");
   } else {
     if (!animationPaused)
       rainSound.play();
+
+    toggleSoundButton.innerText = "Mute Rain Sound";
     toggleSoundButton.classList.add("active");
   }
 
@@ -281,6 +284,8 @@ toggleSoundButton.addEventListener('click', toggleSound);
 toggleTextShadowButton.addEventListener("click", () => {
   showTextShadow = !showTextShadow;
 
+  toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
+
   if (!animationPaused)
     playActionSound(changeSound);
 
@@ -289,6 +294,9 @@ toggleTextShadowButton.addEventListener("click", () => {
 
 showEmojisButton.addEventListener("click", () => {
   showEmojis = !showEmojis;
+
+  showEmojisButton.innerText = showEmojis ? "Hide Emojis" : "Display Emojis";
+
   toggleActiveButton(showEmojisButton, showEmojis);
 });
 
@@ -296,11 +304,8 @@ toggleFullscreenButton.addEventListener("click", () => {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen();
     settingsDialog.close();
-
-    toggleActiveButton(toggleFullscreenButton, true);
   } else if (document.exitFullscreen) {
     document.exitFullscreen();
-    toggleActiveButton(toggleFullscreenButton, false);
   }
 });
 
@@ -323,6 +328,8 @@ document.querySelectorAll("button[id^='speedBtn']").forEach((speedButton) => {
 
 pauseButton.addEventListener("click", () => {
   animationPaused = !animationPaused;
+
+  pauseButton.innerText = animationPaused ? "Resume" : "Pause";
 
   if (soundsEnabled) {
     if (animationPaused) {
