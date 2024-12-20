@@ -21,6 +21,7 @@ const showEmojisButton = document.getElementById("showEmojisButton");
 const toggleTextShadowButton = document.getElementById(
   "toggleTextShadowButton"
 );
+const wordsWarningWrapper = document.getElementById("wordsWarning");
 const filterInput = document.getElementById("filterInput");
 const filterSubmit = document.getElementById("filterSubmit");
 const firefoxShadowWarning = document.getElementById("firefoxShadowWarning")
@@ -39,6 +40,7 @@ let cornerButtonsTimeout;
 let animationPaused = false;
 
 const wordsToFilter = [];
+let wordsWarningTimeout;
 
 const colors = [
   "#0ae2ff", // blue
@@ -285,6 +287,7 @@ function displayFilteredWords() {
     removeButton.addEventListener('click', () => {
       wordsToFilter.splice(index, 1);
       wordsListFiltered.className = 'filtered-list';
+      wordsWarningWrapper.style.display = "none";
       playActionSound(pressingSound);
       displayFilteredWords();
     });
@@ -320,6 +323,9 @@ ws.addEventListener("message", async (event) => {
       const match = normalizedWords.some((word) => normalizedPost.split(" ").includes(word));
 
       if (match) {
+        clearTimeout(wordsWarningTimeout);
+        wordsWarningWrapper.style.display = "none";
+
         addPost(postMessage, postUrl);
       }
     }
@@ -453,9 +459,13 @@ canvas.addEventListener("mousedown", function (e) {
 filterSubmit.addEventListener("click", () => {
   const filterValue = filterInput.value;
 
-  if (filterValue) {
+  if (filterValue && !wordsToFilter.includes(filterValue)) {
     wordsToFilter.push(filterValue);
     filterInput.value = "";
+
+    wordsWarningTimeout = setTimeout(() => {
+      wordsWarningWrapper.style.display = "block";
+    }, 5000);
 
     playActionSound(pressingSound);
     displayFilteredWords();

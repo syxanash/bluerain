@@ -129,6 +129,11 @@ canvas {
   width: 100%;
 }
 
+.filter-warning {
+  padding-top: 20px;
+  display: none;
+}
+
 .filtered-list {
   margin-top: 20px;
   display: grid;
