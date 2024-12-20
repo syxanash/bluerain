@@ -194,13 +194,17 @@ function loop(timestamp) {
 }
 
 function addPost(postMessage, postUrl) {
+  const emptyColumns = [];
+
   for (let j = 0; j < skeets.length; j++) {
     if (skeets[j].index === 0 && skeets[j].post === "") {
-      skeets[j] = { post: postMessage, url: postUrl, index: 0, drop: 1 };
-
-      break;
+      emptyColumns.push(j);
     }
   }
+
+  const randomColumn = emptyColumns[Math.floor(Math.random() * emptyColumns.length)];
+
+  skeets[randomColumn] = { post: postMessage, url: postUrl, index: 0, drop: 1 };
 }
 
 function toggleSound() {
