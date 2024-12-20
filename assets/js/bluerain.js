@@ -317,7 +317,7 @@ ws.addEventListener("message", async (event) => {
       const normalizedPost = postMessage.toLowerCase();
       const normalizedWords = wordsToFilter.map((word) => word.toLowerCase());
 
-      const match = normalizedWords.some((word) => normalizedPost.includes(word));
+      const match = normalizedWords.some((word) => normalizedPost.split(" ").includes(word));
 
       if (match) {
         addPost(postMessage, postUrl);
