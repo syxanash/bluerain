@@ -314,9 +314,10 @@ ws.addEventListener("message", async (event) => {
     if (wordsToFilter.length === 0) {
       addPost(postMessage, postUrl);
     } else {
-      const words = wordsToFilter.join("|");
-      const regex = new RegExp(`\\b(${words.replace(/#/g, "")})\\b`, "i");
-      const match = postMessage.match(regex);
+      const normalizedPost = postMessage.toLowerCase();
+      const normalizedWords = wordsToFilter.map((word) => word.toLowerCase());
+
+      const match = normalizedWords.some((word) => normalizedPost.includes(word));
 
       if (match) {
         addPost(postMessage, postUrl);
