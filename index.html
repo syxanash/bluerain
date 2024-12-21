@@ -42,6 +42,9 @@
   <dialog id="filter-dialog" class="dialog-style" style="background-color: #00000045 !important;">
     <div class="window active" style="background-color: #00000045 !important;">
       <div class="title-bar">
+        <div class="title-bar-buttons">
+          <button id="aboutFilters" style="color: #c6c6c6;">?</button>
+        </div>
         <div class="title-bar-text">
           Filter Posts
         </div>
@@ -51,14 +54,14 @@
       </div>
       <div class="window-body" style="background-color: #00000045 !important;">
         <div class="body-style skeet-message-dialog" style="background-color: #00000045 !important;">
-          Enter words to filter new posts<br><br>
+          Enter some words to filter new posts<br><br>
           <div style="display: flex; align-items: center;">
             <input id="filterInput" class="filter-input" type="text" value="" style="margin-right: 5px;">
             <button id="filterSubmit">Add</button>
           </div>
           <div id="wordsListFiltered" class="filtered-list"></div>
           <div id="wordsWarning" class="filter-warning">
-            If you don't see any tweets try to add more words to filter
+            If you don't see any posts try adding more words
           </div>
           </div>
         </div>

@@ -13,6 +13,7 @@ const skeetDialog = document.getElementById("skeet-dialog");
 const skeetCloseButton = document.getElementById("skeetCloseButton");
 const filterDialog = document.getElementById("filter-dialog");
 const filterButton = document.getElementById("showFilter");
+const aboutFilterButton = document.getElementById("aboutFilters");
 const filterCloseButton = document.getElementById("filterCloseButton");
 const toggleFullscreenButton = document.getElementById("toggleFullscreen");
 const fullscreenButtonContainer = document.getElementById("fullscreenButtonContainer");
@@ -482,7 +483,12 @@ filterButton.addEventListener("click", () => {
   filterDialog.showModal();
 });
 
+aboutFilterButton.addEventListener("click", () => {
+  alert('This filter allows you to show on screen only posts containing specific words.');
+});
+
 filterCloseButton.addEventListener("click", () => {
+  wordsWarningWrapper.style.display = "none";
   filterDialog.close();
 });
 
