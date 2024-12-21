@@ -1,11 +1,11 @@
-@font-face{
+@font-face {
   font-family: "Chicago";
   src: url("../fonts/Chicago.woff")format("woff"),
-      url("../fonts/Chicago.woff2")format("woff2"),
-      url("../fonts/Chicago.ttf")format("truetype");
-  font-weight:normal;
-  font-style:normal;
-  font-display:swap;
+    url("../fonts/Chicago.woff2")format("woff2"),
+    url("../fonts/Chicago.ttf")format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -31,13 +31,13 @@
   src: local("WhiteRabbit"), url("../fonts/WhiteRabbit.woff") format('woff');
 }
 
-@font-face{
+@font-face {
   font-family: "Space Mono";
   src: url("../fonts/Space-Mono.woff")format("woff"),
-      url("../fonts/Space-Mono.woff2")format("woff2");
-  font-weight:normal;
-  font-style:normal;
-  font-display:swap;
+    url("../fonts/Space-Mono.woff2")format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 * {
@@ -53,6 +53,33 @@ body {
 canvas {
   display: block;
   user-select: none;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.welcome-window {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.5rem;
+  text-shadow: 0px 0px 10px #0ae2ff;
+  pointer-events: none;
+  opacity: 1;
+  animation: fadeOut 1s forwards;
+  animation-delay: 1.5s;
 }
 
 .corner-buttons {
