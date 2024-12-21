@@ -285,6 +285,7 @@ function displayFilteredWords() {
     const removeButton = document.createElement('button');
     removeButton.textContent = '✕';
     removeButton.style.marginRight = '10px';
+    removeButton.style.width = '25px';
     removeButton.addEventListener('click', () => {
       wordsToFilter.splice(index, 1);
       wordsListFiltered.className = 'filtered-list';
