@@ -7,10 +7,14 @@ const ws = new WebSocket(
 
 const cornerButtons = document.querySelector(".corner-buttons");
 const settingsDialog = document.getElementById("settings-dialog");
-const skeetDialog = document.getElementById("skeet-dialog");
-const showButton = document.getElementById("showSettings");
+const settingsButton = document.getElementById("showSettings");
 const settingsCloseButton = document.getElementById("settingsCloseButton");
+const skeetDialog = document.getElementById("skeet-dialog");
 const skeetCloseButton = document.getElementById("skeetCloseButton");
+const filterDialog = document.getElementById("filter-dialog");
+const filterButton = document.getElementById("showFilter");
+const aboutFilterButton = document.getElementById("aboutFilters");
+const filterCloseButton = document.getElementById("filterCloseButton");
 const toggleFullscreenButton = document.getElementById("toggleFullscreen");
 const fullscreenButtonContainer = document.getElementById("fullscreenButtonContainer");
 const pauseButton = document.getElementById("pauseButton");
@@ -18,6 +22,9 @@ const showEmojisButton = document.getElementById("showEmojisButton");
 const toggleTextShadowButton = document.getElementById(
   "toggleTextShadowButton"
 );
+const wordsWarningWrapper = document.getElementById("wordsWarning");
+const filterInput = document.getElementById("filterInput");
+const filterSubmit = document.getElementById("filterSubmit");
 const firefoxShadowWarning = document.getElementById("firefoxShadowWarning")
 const fontDropdown = document.getElementById("fontDropdown");
 const colorDropdown = document.getElementById("colorDropdown");
@@ -27,10 +34,14 @@ const rainSound = new SoundControl('assets/sounds/rain.mp3', true);
 const pauseSound = new SoundControl('assets/sounds/paused.mp3');
 const changeSound = new SoundControl('assets/sounds/change.mp3');
 const selectionSound = new SoundControl('assets/sounds/selection.mp3');
+const pressingSound = new SoundControl('assets/sounds/pressing.mp3');
 
 let soundsEnabled = false;
 let cornerButtonsTimeout;
 let animationPaused = false;
+
+const wordsToFilter = [];
+let wordsWarningTimeout;
 
 const colors = [
   "#0ae2ff", // blue
@@ -252,6 +263,43 @@ function showButtons() {
   cornerButtons.classList.add("fade-in");
 }
 
+function displayFilteredWords() {
+  const wordsListFiltered = document.getElementById('wordsListFiltered');
+  wordsListFiltered.innerHTML = '';
+
+  if (wordsToFilter.length > 0) {
+    filterButton.style.color = '#0ae2ff';
+  } else {
+    filterButton.style.color = '';
+  }
+
+  wordsToFilter.forEach((word, index) => {
+    const wordDiv = document.createElement('div');
+    wordDiv.style.display = 'flex';
+    wordDiv.style.alignItems = 'center';
+
+    const wordSpan = document.createElement('span');
+    wordSpan.textContent = word;
+    wordSpan.className = 'filtered-word';
+
+    const removeButton = document.createElement('button');
+    removeButton.textContent = '✕';
+    removeButton.style.marginRight = '10px';
+    removeButton.addEventListener('click', () => {
+      wordsToFilter.splice(index, 1);
+      wordsListFiltered.className = 'filtered-list';
+      wordsWarningWrapper.style.display = "none";
+      playActionSound(pressingSound);
+      displayFilteredWords();
+    });
+
+    wordDiv.appendChild(removeButton);
+    wordDiv.appendChild(wordSpan);
+    wordsListFiltered.appendChild(wordDiv);
+    wordsListFiltered.className = 'filtered-list raised padding';
+  });
+}
+
 if (showEmojis) showEmojisButton.classList.add("active");
 if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
 if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
@@ -267,7 +315,27 @@ ws.addEventListener("message", async (event) => {
     const postId = message?.commit.rkey;
     const postUrl = `https://bsky.app/profile/${did}/post/${postId}`;
 
-    addPost(postMessage, postUrl);
+    if (wordsToFilter.length === 0) {
+      addPost(postMessage, postUrl);
+    } else {
+      const normalizedPost = postMessage.toLowerCase();
+      const normalizedWords = wordsToFilter.map((word) => word.toLowerCase());
+
+      const match = normalizedWords.some((word) => normalizedPost.split(" ").includes(word));
+
+      if (match) {
+        clearTimeout(wordsWarningTimeout);
+        wordsWarningWrapper.style.display = "none";
+
+        addPost(postMessage, postUrl);
+      }
+    }
+  }
+});
+
+document.getElementById('filterInput').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    document.getElementById('filterSubmit').click();
   }
 });
 
@@ -389,7 +457,42 @@ canvas.addEventListener("mousedown", function (e) {
   }
 });
 
-showButton.addEventListener("click", () => {
+filterSubmit.addEventListener("click", () => {
+  const filterValue = filterInput.value;
+
+  if (filterValue && !wordsToFilter.includes(filterValue)) {
+    wordsToFilter.push(filterValue);
+    filterInput.value = "";
+
+    wordsWarningTimeout = setTimeout(() => {
+      wordsWarningWrapper.style.display = "block";
+    }, 5000);
+
+    playActionSound(pressingSound);
+    displayFilteredWords();
+
+    for (let i = 0; i < skeets.length; i++) {
+      skeets[i] = { post: '', url: '', index: 0, drop: 1 };
+    }
+  }
+});
+
+filterButton.addEventListener("click", () => {
+  playActionSound(selectionSound);
+
+  filterDialog.showModal();
+});
+
+aboutFilterButton.addEventListener("click", () => {
+  alert('This filter allows you to show on screen only posts containing specific words.');
+});
+
+filterCloseButton.addEventListener("click", () => {
+  wordsWarningWrapper.style.display = "none";
+  filterDialog.close();
+});
+
+settingsButton.addEventListener("click", () => {
   playActionSound(selectionSound);
 
   settingsDialog.showModal();
