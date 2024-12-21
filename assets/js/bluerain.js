@@ -485,7 +485,7 @@ filterButton.addEventListener("click", () => {
 });
 
 aboutFilterButton.addEventListener("click", () => {
-  alert('This filter allows you to show on screen only posts containing specific words.');
+  alert('This filter allows you to display only posts containing specific words on screen as people write them in real time, so you need to be patient!');
 });
 
 filterCloseButton.addEventListener("click", () => {
