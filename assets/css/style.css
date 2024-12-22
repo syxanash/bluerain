@@ -40,6 +40,13 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'OCRAStd';
+  font-weight: normal;
+  font-style: normal;
+  src: local("OCRAStd"), url(../fonts/OCRAStd.woff) format('woff');
+}
+
 * {
   margin: 0;
   padding: 0;
