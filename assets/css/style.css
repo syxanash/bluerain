@@ -78,8 +78,8 @@ canvas {
   text-shadow: 0px 0px 10px #0ae2ff;
   pointer-events: none;
   opacity: 1;
-  animation: fadeOut 1s forwards;
-  animation-delay: 1.5s;
+  animation: fadeOut 2s forwards;
+  animation-delay: 2s;
 }
 
 .corner-buttons {
