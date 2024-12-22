@@ -389,6 +389,8 @@ document.querySelectorAll("button[id^='speedBtn']").forEach((speedButton) => {
     if (animationSpeed[buttonNumber - 1]) {
       choosenSpeed = animationSpeed[buttonNumber - 1];
       animationInterval = 1000 / choosenSpeed;
+
+      playActionSound(pressingSound);
     }
 
     document.querySelectorAll("button[id^='speedBtn']").forEach((button) => {
