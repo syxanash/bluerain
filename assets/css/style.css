@@ -83,9 +83,10 @@ canvas {
   font-family: 'Courier New', Courier, monospace;
   font-size: 1.3rem;
   text-shadow: 0px 0px 10px #0ae2ff;
+  color: #0ae2ff;
   pointer-events: none;
   opacity: 1;
-  animation: fadeOut 2s forwards;
+  animation: fadeOut 1s forwards;
   animation-delay: 2s;
 }
 

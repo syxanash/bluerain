@@ -345,6 +345,17 @@ window.onresize = () => {
   resizeCanvas();
 };
 
+window.addEventListener("keydown", function (e) {
+  if ((e.ctrlKey && e.key.toLowerCase() === 'f') ||
+    (e.metaKey && e.key.toLowerCase() === 'f')) {
+    if (!filterDialog.open) {
+      e.preventDefault();
+      playActionSound(selectionSound);
+      filterDialog.showModal();
+    }
+  }
+});
+
 document.addEventListener("mousemove", () => {
   clearTimeout(cornerButtonsTimeout);
 
