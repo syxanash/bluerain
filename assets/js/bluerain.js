@@ -373,8 +373,7 @@ toggleTextShadowButton.addEventListener("click", () => {
 
   toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
 
-  if (!animationPaused)
-    playActionSound(changeSound);
+  playActionSound(pressingSound);
 
   toggleActiveButton(toggleTextShadowButton, showTextShadow);
 });
@@ -382,12 +381,16 @@ toggleTextShadowButton.addEventListener("click", () => {
 showEmojisButton.addEventListener("click", () => {
   showEmojis = !showEmojis;
 
+  playActionSound(pressingSound);
+
   showEmojisButton.innerText = showEmojis ? "Hide Emojis" : "Display Emojis";
 
   toggleActiveButton(showEmojisButton, showEmojis);
 });
 
 toggleFullscreenButton.addEventListener("click", () => {
+  playActionSound(changeSound);
+
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen();
     settingsDialog.close();
