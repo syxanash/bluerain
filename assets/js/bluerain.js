@@ -76,6 +76,9 @@ const rainFonts = [
   "Space Mono"
 ];
 
+const fontSizes = [10, 15, 17, 20, 25];
+let fontSize = fontSizes[2];
+
 let showEmojis = true;
 let showTextShadow = false;
 
@@ -85,8 +88,7 @@ const canvas = document.querySelector("canvas"),
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const fontSize = 17,
-  columns = Math.floor(canvas.width / fontSize);
+const columns = Math.floor(canvas.width / fontSize);
 
 ctx.font = `${fontSize}px ${rainFonts[0]}`;
 
@@ -410,6 +412,25 @@ document.querySelectorAll("button[id^='speedBtn']").forEach((speedButton) => {
     });
 
     speedButton.classList.add("active");
+  });
+});
+
+
+document.querySelectorAll("button[id^='fontSizeBtn']").forEach((fontSizeButton) => {
+  fontSizeButton.addEventListener("click", (event) => {
+    const buttonNumber = event.target.id.match(/\d+$/)?.[0];
+
+    if (fontSizes[buttonNumber - 1]) {
+      fontSize = fontSizes[buttonNumber - 1];
+      resizeCanvas();
+      playActionSound(pressingSound);
+    }
+
+    document.querySelectorAll("button[id^='fontSizeBtn']").forEach((button) => {
+      button.classList.remove("active");
+    });
+
+    fontSizeButton.classList.add("active");
   });
 });
 

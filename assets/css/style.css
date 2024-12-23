@@ -60,6 +60,7 @@ body {
 canvas {
   display: block;
   user-select: none;
+  cursor: crosshair;
 }
 
 @keyframes fadeOut {
@@ -121,12 +122,12 @@ canvas {
   background-color: #000000bd !important;
 }
 
-.rain-speed-container {
+.group-buttons-container {
   padding-top: 10px;
   padding-bottom: 20px;
 }
 
-.rain-speed-container button {
+.group-buttons-container button {
   width: 50px;
 }
 
