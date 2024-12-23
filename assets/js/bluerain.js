@@ -350,7 +350,7 @@ window.onresize = () => {
 window.addEventListener("keydown", function (e) {
   if ((e.ctrlKey && e.key.toLowerCase() === 'f') ||
     (e.metaKey && e.key.toLowerCase() === 'f')) {
-    if (!filterDialog.open) {
+    if (!filterDialog.open && !settingsDialog.open && !skeetDialog.open) {
       e.preventDefault();
       playActionSound(selectionSound);
       filterDialog.showModal();
