@@ -77,7 +77,7 @@ const rainFonts = [
 ];
 
 const fontSizes = [10, 15, 17, 20, 25];
-let fontSize = fontSizes[2];
+let fontSize = Util.isMobile() ? fontSizes[1] : fontSizes[2];
 
 let showEmojis = true;
 let showTextShadow = false;
