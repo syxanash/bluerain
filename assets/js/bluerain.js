@@ -77,7 +77,14 @@ const rainFonts = [
 ];
 
 const fontSizes = [10, 15, 17, 20, 25];
-let fontSize = Util.isMobile() ? fontSizes[1] : fontSizes[2];
+let fontSize = fontSizes[2];
+
+if (Util.isMobile()) {
+  document.getElementById('fontSizeBtn3').classList.remove("active");
+  document.getElementById('fontSizeBtn2').classList.add("active");
+
+  fontSize = fontSizes[1];
+}
 
 let showEmojis = true;
 let showTextShadow = false;
