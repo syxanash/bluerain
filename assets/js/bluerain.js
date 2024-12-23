@@ -224,13 +224,13 @@ function addPost(postMessage, postUrl) {
 function toggleSound() {
   if (soundsEnabled) {
     rainSound.stop();
-    toggleSoundButton.innerText = "Play Rain Sound";
+    toggleSoundButton.innerText = "Sound On";
     toggleSoundButton.classList.remove("active");
   } else {
     if (!animationPaused)
       rainSound.play();
 
-    toggleSoundButton.innerText = "Mute Rain Sound";
+    toggleSoundButton.innerText = "Sound Off";
     toggleSoundButton.classList.add("active");
   }
 
