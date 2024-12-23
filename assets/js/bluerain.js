@@ -1,6 +1,9 @@
 import Util from './util.js';
 import SoundControl from './SoundContro.js';
 
+const urlParams = new URLSearchParams(window.location.search);
+const urlFilteredWords = urlParams.get('filter')?.split('|').map(word => decodeURIComponent(word)).filter(word => word.trim() !== '');
+
 const ws = new WebSocket(
   "wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post"
 );
@@ -40,7 +43,7 @@ let soundsEnabled = false;
 let cornerButtonsTimeout;
 let animationPaused = false;
 
-const wordsToFilter = [];
+const wordsToFilter = urlFilteredWords || [];
 let wordsWarningTimeout;
 
 const colors = [
@@ -273,6 +276,17 @@ function showButtons() {
   cornerButtons.classList.add("fade-in");
 }
 
+function updateURLWithWords(words) {
+  const url = new URL(window.location);
+  if (words.length > 0) {
+    const encodedWords = words.map(word => encodeURIComponent(word)).join('|');
+    url.searchParams.set('filter', encodedWords);
+  } else {
+    url.searchParams.delete('filter');
+  }
+  window.history.pushState({}, '', url);
+}
+
 function displayFilteredWords() {
   const wordsListFiltered = document.getElementById('wordsListFiltered');
   wordsListFiltered.innerHTML = '';
@@ -300,6 +314,7 @@ function displayFilteredWords() {
       wordsToFilter.splice(index, 1);
       wordsListFiltered.className = 'filtered-list';
       wordsWarningWrapper.style.display = "none";
+      updateURLWithWords(wordsToFilter);
       playActionSound(pressingSound);
       displayFilteredWords();
     });
@@ -311,6 +326,7 @@ function displayFilteredWords() {
   });
 }
 
+if (urlFilteredWords !== undefined) displayFilteredWords();
 if (showEmojis) showEmojisButton.classList.add("active");
 if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
 if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
@@ -508,6 +524,7 @@ filterSubmit.addEventListener("click", () => {
 
   if (filterValue && !wordsToFilter.includes(filterValue)) {
     wordsToFilter.push(filterValue);
+    updateURLWithWords(wordsToFilter);
     filterInput.value = "";
 
     wordsWarningTimeout = setTimeout(() => {
