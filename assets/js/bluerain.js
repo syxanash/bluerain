@@ -90,7 +90,7 @@ if (Util.isMobile()) {
 }
 
 let showEmojis = true;
-let showTextShadow = false;
+let showTextShadow = localStorage.getItem("showTextShadow") === null ? false : JSON.parse(localStorage.getItem("showTextShadow"));
 
 const canvas = document.querySelector("canvas"),
   ctx = canvas.getContext("2d");
@@ -326,6 +326,10 @@ function displayFilteredWords() {
   });
 }
 
+if (showTextShadow) {
+  toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
+  toggleActiveButton(toggleTextShadowButton, showTextShadow);
+}
 if (urlFilteredWords !== undefined) displayFilteredWords();
 if (showEmojis) showEmojisButton.classList.add("active");
 if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
@@ -394,10 +398,11 @@ toggleSoundButton.addEventListener('click', toggleSound);
 toggleTextShadowButton.addEventListener("click", () => {
   showTextShadow = !showTextShadow;
 
-  toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
+  localStorage.setItem("showTextShadow", showTextShadow);
 
   playActionSound(pressingSound);
-
+  
+  toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
   toggleActiveButton(toggleTextShadowButton, showTextShadow);
 });
 
