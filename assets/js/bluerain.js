@@ -90,7 +90,9 @@ if (Util.isMobile()) {
 }
 
 let showEmojis = true;
-let showTextShadow = localStorage.getItem("showTextShadow") === null ? false : JSON.parse(localStorage.getItem("showTextShadow"));
+let showTextShadow = localStorage.getItem("showTextShadow") === null || Util.isFirefox()
+  ? false
+  : JSON.parse(localStorage.getItem("showTextShadow"));
 
 const canvas = document.querySelector("canvas"),
   ctx = canvas.getContext("2d");
@@ -398,10 +400,11 @@ toggleSoundButton.addEventListener('click', toggleSound);
 toggleTextShadowButton.addEventListener("click", () => {
   showTextShadow = !showTextShadow;
 
-  localStorage.setItem("showTextShadow", showTextShadow);
+  if (!Util.isFirefox())
+    localStorage.setItem("showTextShadow", showTextShadow);
 
   playActionSound(pressingSound);
-  
+
   toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
   toggleActiveButton(toggleTextShadowButton, showTextShadow);
 });
