@@ -157,7 +157,7 @@ function resizeCanvas() {
 
 function animateRain() {
   // Add fade effect to the canvas
-  ctx.fillStyle = `rgba(0, 0, 0, 0.${fontSize >= 20 ? '1' : '06'})`;
+  ctx.fillStyle = `rgba(0, 0, 0, 0.${fontSize > fontSizes[2] ? '1' : '06'})`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   for (let i = 0; i < skeets.length; i++) {
