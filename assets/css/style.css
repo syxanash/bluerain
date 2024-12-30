@@ -17,6 +17,14 @@
 }
 
 @font-face {
+  font-family: "noto";
+  font-style: normal;
+  font-weight: normal;
+  src: local("noto"),
+    url("../fonts/noto.woff") format("woff");
+}
+
+@font-face {
   font-family: 'DatCub-Bold';
   font-style: normal;
   font-weight: normal;
@@ -71,6 +79,17 @@ canvas {
   100% {
     opacity: 0;
   }
+}
+
+.noto-emoji-warning {
+  font-family: 'noto';
+  color: #f3ff0a;
+}
+
+.noto-emoji-coffee a {
+  font-family: 'noto';
+  color: #ff780a;
+  text-decoration: none;
 }
 
 .welcome-window {
