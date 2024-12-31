@@ -109,6 +109,7 @@ const columns = Math.floor(canvas.width / fontSize);
 ctx.font = `${fontSize}px ${rainFonts[0]}`;
 
 const skeets = Array(columns).fill({ post: '', url: '', index: 0, drop: 1 });
+const pastSkeets = [...skeets];
 
 const sanitizeForEmojis = (string) =>
   [...new Intl.Segmenter().segment(string)].map((x) => x.segment);
@@ -203,7 +204,8 @@ function animateRain() {
       skeets[i].drop = 1;
     }
 
-    if (skeets[i].index >= characters.length) {
+    if (skeets[i].index === characters.length && skeets[i].post !== '') {
+      pastSkeets[i] = skeets[i];
       skeets[i] = { post: '', url: '', index: 0, drop: 1 };
     }
   }
@@ -525,18 +527,27 @@ colorDropdown.addEventListener("change", () => {
 });
 
 canvas.addEventListener("mousedown", function (e) {
-  let rect = canvas.getBoundingClientRect();
-  let x = e.clientX - rect.left;
-  const gridColumns = Math.floor(canvas.width / fontSize)
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const gridColumns = Math.floor(canvas.width / fontSize);
+  const gridRows = Math.floor(canvas.height / fontSize);
+
+  const selectedColumn = Math.floor(x / Math.floor(canvas.width / gridColumns));
+  const selectedRow = Math.floor(y / Math.floor(canvas.height / gridRows));
 
   const skeetMessageSpan = document.getElementById("skeetMessage");
   const skeetUrlSpan = document.getElementById("skeetUrl");
 
-  const selectedColumn = Math.floor(x / Math.floor(canvas.width / gridColumns));
-
   if (skeets[selectedColumn].post) {
-    skeetMessageSpan.innerText = skeets[selectedColumn].post;
-    skeetUrlSpan.innerHTML = `<a href="${skeets[selectedColumn].url}" target="_blank">${skeets[selectedColumn].url}</a>`;
+    // +2 because drops start at 1
+    if ((selectedRow + 2) > skeets[selectedColumn].drop && pastSkeets[selectedColumn].post !== '') {
+      skeetMessageSpan.innerText = pastSkeets[selectedColumn].post;
+      skeetUrlSpan.innerHTML = `<a href="${pastSkeets[selectedColumn].url}" target="_blank">${pastSkeets[selectedColumn].url}</a>`;
+    } else {
+      skeetMessageSpan.innerText = skeets[selectedColumn].post;
+      skeetUrlSpan.innerHTML = `<a href="${skeets[selectedColumn].url}" target="_blank">${skeets[selectedColumn].url}</a>`;
+    }
 
     playActionSound(selectionSound);
 
