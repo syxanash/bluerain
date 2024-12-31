@@ -430,7 +430,7 @@ toggleNSFWButton.addEventListener("click", () => {
 
   localStorage.setItem("nsfwDisplayed", nsfwDisplayed);
 
-  playActionSound(changeSound);
+  playActionSound(pressingSound);
   toggleNSFWButton.innerText = nsfwDisplayed ? "Hide NSFW Posts" : "Display NSFW Posts";
   toggleActiveButton(toggleNSFWButton, nsfwDisplayed);
 });
