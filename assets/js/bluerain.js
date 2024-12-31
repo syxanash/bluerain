@@ -20,6 +20,7 @@ const aboutFilterButton = document.getElementById("aboutFilters");
 const filterCloseButton = document.getElementById("filterCloseButton");
 const toggleFullscreenButton = document.getElementById("toggleFullscreen");
 const fullscreenButtonContainer = document.getElementById("fullscreenButtonContainer");
+const toggleNSFWButton = document.getElementById("toggleNSFW");
 const pauseButton = document.getElementById("pauseButton");
 const showEmojisButton = document.getElementById("showEmojisButton");
 const toggleTextShadowButton = document.getElementById(
@@ -93,6 +94,9 @@ let showEmojis = true;
 let showTextShadow = localStorage.getItem("showTextShadow") === null || Util.isFirefox()
   ? false
   : JSON.parse(localStorage.getItem("showTextShadow"));
+let nsfwDisplayed = localStorage.getItem("nsfwDisplayed") === null
+  ? true
+  : JSON.parse(localStorage.getItem("nsfwDisplayed"));
 
 const canvas = document.querySelector("canvas"),
   ctx = canvas.getContext("2d");
@@ -328,10 +332,12 @@ function displayFilteredWords() {
   });
 }
 
-if (showTextShadow) {
-  toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
-  toggleActiveButton(toggleTextShadowButton, showTextShadow);
-}
+toggleNSFWButton.innerText = nsfwDisplayed ? "Hide NSFW Posts" : "Display NSFW Posts";
+toggleActiveButton(toggleNSFWButton, nsfwDisplayed);
+
+toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
+toggleActiveButton(toggleTextShadowButton, showTextShadow);
+
 if (urlFilteredWords !== undefined) displayFilteredWords();
 if (showEmojis) showEmojisButton.classList.add("active");
 if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
@@ -349,6 +355,9 @@ ws.addEventListener("message", async (event) => {
     const postUrl = `https://bsky.app/profile/${did}/post/${postId}`;
 
     if (wordsToFilter.length === 0) {
+      if (!nsfwDisplayed && Util.isNSFW(postMessage))
+        return;
+
       addPost(postMessage, postUrl);
     } else {
       const normalizedPost = postMessage.toLowerCase();
@@ -404,7 +413,6 @@ toggleTextShadowButton.addEventListener("click", () => {
     localStorage.setItem("showTextShadow", showTextShadow);
 
   playActionSound(pressingSound);
-
   toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
   toggleActiveButton(toggleTextShadowButton, showTextShadow);
 });
@@ -413,11 +421,20 @@ showEmojisButton.addEventListener("click", () => {
   showEmojis = !showEmojis;
 
   playActionSound(pressingSound);
-
   showEmojisButton.innerText = showEmojis ? "Hide Emojis" : "Display Emojis";
-
   toggleActiveButton(showEmojisButton, showEmojis);
 });
+
+toggleNSFWButton.addEventListener("click", () => {
+  nsfwDisplayed = !nsfwDisplayed;
+
+  localStorage.setItem("nsfwDisplayed", nsfwDisplayed);
+
+  playActionSound(changeSound);
+  toggleNSFWButton.innerText = nsfwDisplayed ? "Hide NSFW Posts" : "Display NSFW Posts";
+  toggleActiveButton(toggleNSFWButton, nsfwDisplayed);
+});
+
 
 toggleFullscreenButton.addEventListener("click", () => {
   playActionSound(changeSound);
