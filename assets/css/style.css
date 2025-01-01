@@ -100,14 +100,18 @@ canvas {
   align-items: center;
   margin: auto;
   text-align: center;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 1.3rem;
-  text-shadow: 0px 0px 10px #0ae2ff;
+  font-family: 'OcraStd';
+  font-size: 1rem;
+  text-shadow: 0px 0px 15px #0ae2ff;
   color: #0ae2ff;
   pointer-events: none;
   opacity: 1;
-  animation: fadeOut 1s forwards;
-  animation-delay: 2s;
+  animation: fadeOut 0.2s forwards;
+  animation-delay: 2.5s;
+}
+
+.welcome-text {
+  margin-right: 10px;
 }
 
 .corner-buttons {
