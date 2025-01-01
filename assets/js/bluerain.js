@@ -334,17 +334,6 @@ function displayFilteredWords() {
   });
 }
 
-toggleNSFWButton.innerText = nsfwDisplayed ? "Hide NSFW Posts" : "Display NSFW Posts";
-toggleActiveButton(toggleNSFWButton, nsfwDisplayed);
-
-toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
-toggleActiveButton(toggleTextShadowButton, showTextShadow);
-
-if (urlFilteredWords !== undefined) displayFilteredWords();
-if (showEmojis) showEmojisButton.classList.add("active");
-if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
-if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
-
 ws.addEventListener("message", async (event) => {
   if (animationPaused) return;
 
@@ -437,7 +426,6 @@ toggleNSFWButton.addEventListener("click", () => {
   toggleActiveButton(toggleNSFWButton, nsfwDisplayed);
 });
 
-
 toggleFullscreenButton.addEventListener("click", () => {
   playActionSound(changeSound);
 
@@ -467,7 +455,6 @@ document.querySelectorAll("button[id^='speedBtn']").forEach((speedButton) => {
     speedButton.classList.add("active");
   });
 });
-
 
 document.querySelectorAll("button[id^='fontSizeBtn']").forEach((fontSizeButton) => {
   fontSizeButton.addEventListener("click", (event) => {
@@ -604,6 +591,17 @@ settingsCloseButton.addEventListener("click", () => {
 skeetCloseButton.addEventListener("click", () => {
   skeetDialog.close();
 });
+
+toggleNSFWButton.innerText = nsfwDisplayed ? "Hide NSFW Posts" : "Display NSFW Posts";
+toggleActiveButton(toggleNSFWButton, nsfwDisplayed);
+
+toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
+toggleActiveButton(toggleTextShadowButton, showTextShadow);
+
+if (urlFilteredWords !== undefined) displayFilteredWords();
+if (showEmojis) showEmojisButton.classList.add("active");
+if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
+if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
 
 console.log("%chttps://github.com/syxanash/bluerain", "font-size: medium");
 
