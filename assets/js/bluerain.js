@@ -33,6 +33,7 @@ const firefoxShadowWarning = document.getElementById("firefoxShadowWarning")
 const fontDropdown = document.getElementById("fontDropdown");
 const colorDropdown = document.getElementById("colorDropdown");
 const toggleSoundButton = document.getElementById('toggleSound');
+const welcomeDots = document.getElementById('welcomeDots');
 
 const rainSound = new SoundControl('assets/sounds/rain.mp3', true);
 const pauseSound = new SoundControl('assets/sounds/paused.mp3');
@@ -51,9 +52,9 @@ const colors = [
   "#0ae2ff", // blue
   "#0aff0a", // green
   "#ff0a0a", // red
-  "#ff700a", // orange
   "#ff0ac6", // pink
   "#ffff0a", // yellow
+  "#ff700a", // orange
   "#ffffff", // white
 ];
 
@@ -591,6 +592,14 @@ settingsCloseButton.addEventListener("click", () => {
 skeetCloseButton.addEventListener("click", () => {
   skeetDialog.close();
 });
+
+const welcomeDotsInterval = setInterval(() => {
+  if (welcomeDots.innerText.length < 3) {
+    welcomeDots.innerText = welcomeDots.innerText + '.';
+  } else {
+    clearInterval(welcomeDotsInterval);
+  }
+}, 500);
 
 toggleNSFWButton.innerText = nsfwDisplayed ? "Hide NSFW Posts" : "Display NSFW Posts";
 toggleActiveButton(toggleNSFWButton, nsfwDisplayed);

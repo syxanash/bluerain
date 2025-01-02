@@ -99,7 +99,7 @@ canvas {
   justify-content: center;
   align-items: center;
   margin: auto;
-  text-align: center;
+  text-align: left;
   font-family: 'OcraStd';
   font-size: 1rem;
   text-shadow: 0px 0px 15px #0ae2ff;
@@ -108,10 +108,6 @@ canvas {
   opacity: 1;
   animation: fadeOut 0.2s forwards;
   animation-delay: 2.5s;
-}
-
-.welcome-text {
-  margin-right: 10px;
 }
 
 .corner-buttons {
