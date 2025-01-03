@@ -207,6 +207,7 @@ function animateRain() {
     }
 
     if (skeets[i].index === characters.length && skeets[i].post !== '') {
+      pastSkeets[i] = skeets[i];
       skeets[i] = { post: '', url: '', index: 0, drop: 1 };
     }
   }
