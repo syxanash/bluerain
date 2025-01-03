@@ -59,6 +59,7 @@ const colors = [
 ];
 
 let rainColor = colors[0];
+let randomSelected = false;
 
 const animationSpeed = [5, 10, 20, 30, 60];
 let choosenSpeed = animationSpeed[2];
@@ -109,7 +110,13 @@ const columns = Math.floor(canvas.width / fontSize);
 
 ctx.font = `${fontSize}px ${rainFonts[0]}`;
 
-const skeets = Array(columns).fill({ post: '', url: '', index: 0, drop: 1 });
+const skeets = Array(columns).fill({
+  post: '',
+  url: '',
+  index: 0,
+  drop: 1,
+  color: ''
+});
 const pastSkeets = [...skeets];
 
 const sanitizeForEmojis = (string) =>
@@ -146,14 +153,16 @@ function resizeCanvas() {
         post: '',
         url: '',
         index: 0,
-        drop: 1
+        drop: 1,
+        color: '',
       }
     } else {
       skeets[i] = {
         post: oldSkeets[i].post,
         url: oldSkeets[i].url,
         index: oldSkeets[i].index,
-        drop: oldSkeets[i].drop
+        drop: oldSkeets[i].drop,
+        color: oldSkeets[i].color,
       }
     }
   }
@@ -171,6 +180,7 @@ function animateRain() {
       ? sanitizeForEmojis(skeets[i].post)
       : stripEmojis(skeets[i].post);
     const character = characters[skeets[i].index];
+    const characterColor = randomSelected ? skeets[i].color : rainColor;
 
     if (character) {
       // Render the current character in white
@@ -181,7 +191,7 @@ function animateRain() {
         const oldCharacter = characters[skeets[i].index - 1];
         if (oldCharacter) {
           writeCharacter(
-            rainColor,
+            characterColor,
             oldCharacter,
             i * fontSize,
             (skeets[i].drop - 1) * fontSize
@@ -196,7 +206,7 @@ function animateRain() {
     if (skeets[i].drop * fontSize > canvas.height) {
       // color the last character on the grid otherwise they stay white
       writeCharacter(
-        rainColor,
+        characterColor,
         character,
         i * fontSize,
         (skeets[i].drop - 1) * fontSize
@@ -238,7 +248,13 @@ function addPost(postMessage, postUrl) {
 
   const randomColumn = emptyColumns[Math.floor(Math.random() * emptyColumns.length)];
 
-  skeets[randomColumn] = { post: postMessage, url: postUrl, index: 0, drop: 1 };
+  skeets[randomColumn] = {
+    post: postMessage,
+    url: postUrl,
+    index: 0,
+    drop: 1,
+    color: colors[Math.floor(Math.random() * colors.length)]
+  };
 }
 
 function toggleSound() {
@@ -507,12 +523,17 @@ fontDropdown.addEventListener("change", () => {
 });
 
 colorDropdown.addEventListener("change", () => {
-  const selectedColor = colorDropdown.selectedIndex;
+  const dropdownIndex = colorDropdown.selectedIndex;
 
   if (!animationPaused)
     playActionSound(changeSound);
 
-  if (colors[selectedColor]) rainColor = colors[selectedColor];
+  if (dropdownIndex === 7) {
+    randomSelected = true;
+  } else if (colors[dropdownIndex]) {
+    randomSelected = false;
+    rainColor = colors[dropdownIndex];
+  }
 });
 
 canvas.addEventListener("mousedown", function (e) {
@@ -560,7 +581,13 @@ filterSubmit.addEventListener("click", () => {
     displayFilteredWords();
 
     for (let i = 0; i < skeets.length; i++) {
-      skeets[i] = { post: '', url: '', index: 0, drop: 1 };
+      skeets[i] = {
+        post: '',
+        url: '',
+        index: 0,
+        drop: 1,
+        color: ''
+      };
     }
   }
 });
