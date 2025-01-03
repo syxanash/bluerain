@@ -202,8 +202,8 @@ function animateRain() {
         (skeets[i].drop - 1) * fontSize
       );
 
-      pastSkeets[i] = skeets[i];
       skeets[i].drop = 1;
+      pastSkeets[i] = skeets[i];
     }
 
     if (skeets[i].index === characters.length && skeets[i].post !== '') {
