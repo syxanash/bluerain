@@ -20,12 +20,7 @@ const aboutFilterButton = document.getElementById("aboutFilters");
 const filterCloseButton = document.getElementById("filterCloseButton");
 const toggleFullscreenButton = document.getElementById("toggleFullscreen");
 const fullscreenButtonContainer = document.getElementById("fullscreenButtonContainer");
-const toggleNSFWButton = document.getElementById("toggleNSFW");
 const pauseButton = document.getElementById("pauseButton");
-const showEmojisButton = document.getElementById("showEmojisButton");
-const toggleTextShadowButton = document.getElementById(
-  "toggleTextShadowButton"
-);
 const wordsWarningWrapper = document.getElementById("wordsWarning");
 const filterInput = document.getElementById("filterInput");
 const filterSubmit = document.getElementById("filterSubmit");
@@ -34,6 +29,12 @@ const fontDropdown = document.getElementById("fontDropdown");
 const colorDropdown = document.getElementById("colorDropdown");
 const toggleSoundButton = document.getElementById('toggleSound');
 const welcomeDots = document.getElementById('welcomeDots');
+const showEmojisButtonOn = document.getElementById('showEmojisButtonOn');
+const showEmojisButtonOff = document.getElementById('showEmojisButtonOff');
+const textShadowButtonOn = document.getElementById('textShadowButtonOn');
+const textShadowButtonOff = document.getElementById('textShadowButtonOff');
+const nsfwButtonOn = document.getElementById('nsfwButtonOn');
+const nsfwButtonOff = document.getElementById('nsfwButtonOff');
 
 const rainSound = new SoundControl('assets/sounds/rain.mp3', true);
 const pauseSound = new SoundControl('assets/sounds/paused.mp3');
@@ -415,33 +416,56 @@ document.addEventListener("mousemove", () => {
 
 toggleSoundButton.addEventListener('click', toggleSound);
 
-toggleTextShadowButton.addEventListener("click", () => {
-  showTextShadow = !showTextShadow;
+showEmojisButtonOn.addEventListener('click', () => {
+  showEmojis = true;
+  playActionSound(pressingSound);;
+  toggleActiveButton(showEmojisButtonOn, true);
+  toggleActiveButton(showEmojisButtonOff, false);
+});
+
+showEmojisButtonOff.addEventListener('click', () => {
+  showEmojis = false;
+  playActionSound(pressingSound);
+  toggleActiveButton(showEmojisButtonOff, true);
+  toggleActiveButton(showEmojisButtonOn, false);
+});
+
+textShadowButtonOn.addEventListener('click', () => {
+  showTextShadow = true;
 
   if (!Util.isFirefox())
-    localStorage.setItem("showTextShadow", showTextShadow);
+    localStorage.setItem("showTextShadow", true);
 
   playActionSound(pressingSound);
-  toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
-  toggleActiveButton(toggleTextShadowButton, showTextShadow);
+  toggleActiveButton(textShadowButtonOn, true);
+  toggleActiveButton(textShadowButtonOff, false);
 });
 
-showEmojisButton.addEventListener("click", () => {
-  showEmojis = !showEmojis;
+textShadowButtonOff.addEventListener('click', () => {
+  showTextShadow = false;
+
+  if (!Util.isFirefox())
+    localStorage.setItem("showTextShadow", false);
 
   playActionSound(pressingSound);
-  showEmojisButton.innerText = showEmojis ? "Hide Emojis" : "Display Emojis";
-  toggleActiveButton(showEmojisButton, showEmojis);
+  toggleActiveButton(textShadowButtonOff, true);
+  toggleActiveButton(textShadowButtonOn, false);
 });
 
-toggleNSFWButton.addEventListener("click", () => {
-  nsfwDisplayed = !nsfwDisplayed;
-
-  localStorage.setItem("nsfwDisplayed", nsfwDisplayed);
-
+nsfwButtonOn.addEventListener('click', () => {
+  nsfwDisplayed = true;
+  localStorage.setItem("nsfwDisplayed", true);
   playActionSound(pressingSound);
-  toggleNSFWButton.innerText = nsfwDisplayed ? "Hide NSFW Posts" : "Display NSFW Posts";
-  toggleActiveButton(toggleNSFWButton, nsfwDisplayed);
+  toggleActiveButton(nsfwButtonOn, true);
+  toggleActiveButton(nsfwButtonOff, false);
+});
+
+nsfwButtonOff.addEventListener('click', () => {
+  nsfwDisplayed = false;
+  localStorage.setItem("nsfwDisplayed", false);
+  playActionSound(pressingSound);
+  toggleActiveButton(nsfwButtonOff, true);
+  toggleActiveButton(nsfwButtonOn, false);
 });
 
 toggleFullscreenButton.addEventListener("click", () => {
@@ -629,14 +653,13 @@ const welcomeDotsInterval = setInterval(() => {
   }
 }, 500);
 
-toggleNSFWButton.innerText = nsfwDisplayed ? "Hide NSFW Posts" : "Display NSFW Posts";
-toggleActiveButton(toggleNSFWButton, nsfwDisplayed);
+toggleActiveButton(nsfwButtonOn, nsfwDisplayed);
+toggleActiveButton(nsfwButtonOff, !nsfwDisplayed);
 
-toggleTextShadowButton.innerText = showTextShadow ? "Disable Text Shadow" : "Enable Text Shadow";
-toggleActiveButton(toggleTextShadowButton, showTextShadow);
+toggleActiveButton(textShadowButtonOn, showTextShadow);
+toggleActiveButton(textShadowButtonOff, !showTextShadow);
 
 if (urlFilteredWords !== undefined) displayFilteredWords();
-if (showEmojis) showEmojisButton.classList.add("active");
 if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
 if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
 

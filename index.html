@@ -44,7 +44,8 @@
     <button id="pauseButton">Pause</button>
   </div>
   <div class="welcome-window">
-    <fieldset class="padding" style="background-color: black !important; padding: 0.65rem; width: 24rem; min-width: 24rem;">
+    <fieldset class="padding"
+      style="background-color: black !important; padding: 0.65rem; width: 24rem; min-width: 24rem;">
       <div style="max-height: 1.2rem;">The Bluesky Firehose has you<span id="welcomeDots"></span></div>
     </fieldset>
   </div>
@@ -106,12 +107,27 @@
       </div>
       <div class="window-body" style="background-color: #00000045 !important;">
         <div class="body-style" style="background-color: #00000045 !important;">
-          <button id="showEmojisButton">Hide Emojis</button><br><br>
-          <button id="toggleTextShadowButton">Enable Text Shadow</button><span id="firefoxShadowWarning"
-            style="font-weight: bold; display: none;">&nbsp;&nbsp;<span class="noto-emoji-warning" role="img"
-              aria-label="warning">⚠</span> Slow
-            on Firefox!</span><br><br>
-          <button id="toggleNSFW">Hide NSFW Posts</button><br><br>
+          <div class="top-buttons-container"><span>Display Emojis: </span>
+            <span>
+              <button id="showEmojisButtonOn" class="boolean-buttons active">ON</button><button id="showEmojisButtonOff"
+                class="boolean-buttons">OFF</button>
+            </span>
+          </div>
+          <div class="top-buttons-container"><span>Text Glow: </span>
+            <span>
+              <button id="textShadowButtonOn" class="boolean-buttons">ON</button><button id="textShadowButtonOff"
+                class="boolean-buttons active">OFF</button>
+            </span>
+            <div id="firefoxShadowWarning" style="font-weight: bold; display: none;"><br><span
+                class="noto-emoji-warning" role="img" aria-label="warning">⚠</span> Slow
+              on Firefox!</span></div>
+          </div>
+          <div class="top-buttons-container"><span>NSFW Posts: </span>
+            <span>
+              <button id="nsfwButtonOn" class="boolean-buttons active">Show</button><button id="nsfwButtonOff"
+                class="boolean-buttons">Hide</button>
+            </span>
+          </div>
           <span id="fullscreenButtonContainer"><button id="toggleFullscreen">Toggle Fullscreen</button><br><br></span>
           <b>Rain speed</b>
           <div class="group-buttons-container">

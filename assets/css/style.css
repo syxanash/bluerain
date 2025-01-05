@@ -138,6 +138,14 @@ canvas {
   padding: 20px;
 }
 
+.top-buttons-container {
+  padding-bottom: 15px;
+}
+
+.boolean-buttons {
+  width: 50px;
+}
+
 .transparent-bg {
   background-color: #000000bd !important;
 }
