@@ -234,7 +234,6 @@ function loop(timestamp) {
     if (!animationPaused) animateRain();
   }
 
-  // Request the next frame
   requestAnimationFrame(loop);
 }
 
@@ -290,6 +289,16 @@ function toggleActiveButton(button, state) {
     button.classList.add("active");
   } else {
     button.classList.remove("active");
+  }
+}
+
+function selectBooleanButton(stateVariable, onButton, offButton) {
+  if (stateVariable) {
+    toggleActiveButton(onButton, true);
+    toggleActiveButton(offButton, false);
+  } else {
+    toggleActiveButton(offButton, true);
+    toggleActiveButton(onButton, false);
   }
 }
 
@@ -418,16 +427,14 @@ toggleSoundButton.addEventListener('click', toggleSound);
 
 showEmojisButtonOn.addEventListener('click', () => {
   showEmojis = true;
-  playActionSound(pressingSound);;
-  toggleActiveButton(showEmojisButtonOn, true);
-  toggleActiveButton(showEmojisButtonOff, false);
+  playActionSound(pressingSound);
+  selectBooleanButton(showEmojis, showEmojisButtonOn, showEmojisButtonOff);
 });
 
 showEmojisButtonOff.addEventListener('click', () => {
   showEmojis = false;
   playActionSound(pressingSound);
-  toggleActiveButton(showEmojisButtonOff, true);
-  toggleActiveButton(showEmojisButtonOn, false);
+  selectBooleanButton(showEmojis, showEmojisButtonOn, showEmojisButtonOff);
 });
 
 textShadowButtonOn.addEventListener('click', () => {
@@ -437,8 +444,7 @@ textShadowButtonOn.addEventListener('click', () => {
     localStorage.setItem("showTextShadow", true);
 
   playActionSound(pressingSound);
-  toggleActiveButton(textShadowButtonOn, true);
-  toggleActiveButton(textShadowButtonOff, false);
+  selectBooleanButton(showTextShadow, textShadowButtonOn, textShadowButtonOff);
 });
 
 textShadowButtonOff.addEventListener('click', () => {
@@ -448,24 +454,25 @@ textShadowButtonOff.addEventListener('click', () => {
     localStorage.setItem("showTextShadow", false);
 
   playActionSound(pressingSound);
-  toggleActiveButton(textShadowButtonOff, true);
-  toggleActiveButton(textShadowButtonOn, false);
+  selectBooleanButton(showTextShadow, textShadowButtonOn, textShadowButtonOff);
 });
 
 nsfwButtonOn.addEventListener('click', () => {
   nsfwDisplayed = true;
+
   localStorage.setItem("nsfwDisplayed", true);
+
   playActionSound(pressingSound);
-  toggleActiveButton(nsfwButtonOn, true);
-  toggleActiveButton(nsfwButtonOff, false);
+  selectBooleanButton(nsfwDisplayed, nsfwButtonOn, nsfwButtonOff);
 });
 
 nsfwButtonOff.addEventListener('click', () => {
   nsfwDisplayed = false;
+
   localStorage.setItem("nsfwDisplayed", false);
+
   playActionSound(pressingSound);
-  toggleActiveButton(nsfwButtonOff, true);
-  toggleActiveButton(nsfwButtonOn, false);
+  selectBooleanButton(nsfwDisplayed, nsfwButtonOn, nsfwButtonOff);
 });
 
 toggleFullscreenButton.addEventListener("click", () => {
@@ -653,12 +660,8 @@ const welcomeDotsInterval = setInterval(() => {
   }
 }, 500);
 
-toggleActiveButton(nsfwButtonOn, nsfwDisplayed);
-toggleActiveButton(nsfwButtonOff, !nsfwDisplayed);
-
-toggleActiveButton(textShadowButtonOn, showTextShadow);
-toggleActiveButton(textShadowButtonOff, !showTextShadow);
-
+selectBooleanButton(nsfwDisplayed, nsfwButtonOn, nsfwButtonOff);
+selectBooleanButton(showTextShadow, textShadowButtonOn, textShadowButtonOff);
 if (urlFilteredWords !== undefined) displayFilteredWords();
 if (Util.isMobile()) fullscreenButtonContainer.style.display = "none";
 if (Util.isFirefox()) firefoxShadowWarning.style.display = "inline";
