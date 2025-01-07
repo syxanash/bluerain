@@ -411,6 +411,7 @@ window.addEventListener("keydown", function (e) {
       e.preventDefault();
       playActionSound(selectionSound);
       filterDialog.showModal();
+      filterInput.focus();
     }
   }
 });
@@ -625,8 +626,8 @@ filterSubmit.addEventListener("click", () => {
 
 filterButton.addEventListener("click", () => {
   playActionSound(selectionSound);
-
   filterDialog.showModal();
+  filterInput.focus();
 });
 
 aboutFilterButton.addEventListener("click", () => {
