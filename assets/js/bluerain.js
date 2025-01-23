@@ -587,7 +587,7 @@ canvas.addEventListener("mousedown", function (e) {
   const selectedColumn = Math.floor(x / Math.floor(canvas.width / gridColumns));
   const selectedRow = Math.floor(y / Math.floor(canvas.height / gridRows));
 
-  if (skeets[selectedColumn].post) {
+  if (selectedColumn < skeets.length && skeets[selectedColumn].post) {
     const skeetMessageSpan = document.getElementById("skeetMessage");
     const skeetUrlSpan = document.getElementById("skeetUrl");
 
