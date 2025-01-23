@@ -101,11 +101,17 @@ let nsfwDisplayed = localStorage.getItem("nsfwDisplayed") === null
   ? true
   : JSON.parse(localStorage.getItem("nsfwDisplayed"));
 
-const canvas = document.querySelector("canvas"),
+const selectAnimationCanvas = document.getElementById('selectAnimation');
+const animationCtx = selectAnimationCanvas.getContext('2d');
+
+const canvas = document.getElementById("rain"),
   ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
+selectAnimationCanvas.width = canvas.width;
+selectAnimationCanvas.height = canvas.height;
 
 const columns = Math.floor(canvas.width / fontSize);
 
@@ -141,6 +147,9 @@ const writeCharacter = (color, character, x, y) => {
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+
+  selectAnimationCanvas.width = canvas.width;
+  selectAnimationCanvas.height = canvas.height;
 
   const newColumns = Math.floor(canvas.width / fontSize);
 
@@ -578,11 +587,10 @@ canvas.addEventListener("mousedown", function (e) {
   const selectedColumn = Math.floor(x / Math.floor(canvas.width / gridColumns));
   const selectedRow = Math.floor(y / Math.floor(canvas.height / gridRows));
 
-  const skeetMessageSpan = document.getElementById("skeetMessage");
-  const skeetUrlSpan = document.getElementById("skeetUrl");
-
   if (skeets[selectedColumn].post) {
-    // +2 because drops start at 1
+    const skeetMessageSpan = document.getElementById("skeetMessage");
+    const skeetUrlSpan = document.getElementById("skeetUrl");
+
     if ((selectedRow + 2) > skeets[selectedColumn].drop && pastSkeets[selectedColumn].post !== '') {
       skeetMessageSpan.innerText = pastSkeets[selectedColumn].post;
       skeetUrlSpan.innerHTML = `<a href="${pastSkeets[selectedColumn].url}" target="_blank">${pastSkeets[selectedColumn].url}</a>`;
@@ -592,8 +600,45 @@ canvas.addEventListener("mousedown", function (e) {
     }
 
     playActionSound(selectionSound);
-
     skeetDialog.showModal();
+
+    // square animation after showing the modal
+    const startSize = 0;
+    const animationDuration = 700;
+    const startTime = performance.now();
+
+    function animateSquare(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / animationDuration, 1);
+
+      animationCtx.clearRect(0, 0, selectAnimationCanvas.width, selectAnimationCanvas.height);
+
+      const size = startSize + (Math.max(canvas.width, canvas.height) * 2 - startSize) * progress;
+      animationCtx.strokeStyle = 'white';
+      animationCtx.lineWidth = 2;
+
+      animationCtx.shadowColor = 'white';
+      animationCtx.shadowBlur = 4;
+      animationCtx.shadowOffsetX = 0;
+      animationCtx.shadowOffsetY = 0;
+
+      animationCtx.strokeRect(
+        x - size / 2,
+        y - size / 2,
+        size,
+        size
+      );
+
+      animationCtx.shadowBlur = 0;
+
+      if (progress < 1) {
+        requestAnimationFrame(animateSquare);
+      } else {
+        animationCtx.clearRect(0, 0, selectAnimationCanvas.width, selectAnimationCanvas.height);
+      }
+    }
+
+    requestAnimationFrame(animateSquare);
   }
 });
 
