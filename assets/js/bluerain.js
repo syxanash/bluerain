@@ -57,6 +57,7 @@ const colors = [
   "#ffff0a", // yellow
   "#ff700a", // orange
   "#ffffff", // white
+  "#000000", // black
 ];
 
 let rainColor = colors[0];
@@ -182,7 +183,10 @@ function resizeCanvas() {
 
 function animateRain() {
   // Add fade effect to the canvas
-  ctx.fillStyle = `rgba(0, 0, 0, 0.${fontSize > fontSizes[2] ? '1' : '06'})`;
+  ctx.fillStyle = rainColor === '#000000' && !randomSelected
+    ? `rgba(255, 255, 255, 0.1)`
+    : `rgba(0, 0, 0, 0.${fontSize > fontSizes[2] ? '1' : '06'})`;
+
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   for (let i = 0; i < skeets.length; i++) {
@@ -193,8 +197,10 @@ function animateRain() {
     const characterColor = randomSelected ? skeets[i].color : rainColor;
 
     if (character) {
-      // Render the current character in white
-      writeCharacter("#ffffff", character, i * fontSize, skeets[i].drop * fontSize);
+      writeCharacter(rainColor === '#000000' && !randomSelected ? "#000000" : "#ffffff",
+        character, i * fontSize,
+        skeets[i].drop * fontSize
+      );
 
       // Render the previous character in the rain color if applicable
       if (skeets[i].drop >= 2) {
@@ -262,7 +268,7 @@ function addPost(postMessage, postUrl) {
     url: postUrl,
     index: 0,
     drop: 1,
-    color: colors[Math.floor(Math.random() * colors.length)]
+    color: colors[Math.floor(Math.random() * (colors.length - 1))] // -1 excluding black
   };
 }
 
@@ -569,7 +575,7 @@ colorDropdown.addEventListener("change", () => {
   if (!animationPaused)
     playActionSound(changeSound);
 
-  if (dropdownIndex === 7) {
+  if (dropdownIndex === colors.length) {
     randomSelected = true;
   } else if (colors[dropdownIndex]) {
     randomSelected = false;
@@ -614,10 +620,10 @@ canvas.addEventListener("mousedown", function (e) {
       animationCtx.clearRect(0, 0, selectAnimationCanvas.width, selectAnimationCanvas.height);
 
       const size = startSize + (Math.max(canvas.width, canvas.height) * 2 - startSize) * progress;
-      animationCtx.strokeStyle = 'white';
+      animationCtx.strokeStyle = rainColor === '#000000' && !randomSelected ? 'black' : 'white';
       animationCtx.lineWidth = 2;
 
-      animationCtx.shadowColor = 'white';
+      animationCtx.shadowColor = rainColor === '#000000' && !randomSelected ? 'black' : 'white';
       animationCtx.shadowBlur = 4;
       animationCtx.shadowOffsetX = 0;
       animationCtx.shadowOffsetY = 0;
@@ -696,6 +702,12 @@ settingsCloseButton.addEventListener("click", () => {
 
 skeetCloseButton.addEventListener("click", () => {
   skeetDialog.close();
+});
+
+skeetDialog.addEventListener("click", (e) => {
+  if (e.target === skeetDialog) {
+    skeetDialog.close();
+  }
 });
 
 const welcomeDotsInterval = setInterval(() => {
