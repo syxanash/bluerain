@@ -9,14 +9,6 @@
 }
 
 @font-face {
-  font-family: "Matrix Code NFI";
-  font-style: normal;
-  font-weight: normal;
-  src: local("Matrix Code NFI"),
-    url("../fonts/matrix code nfi.woff") format("woff");
-}
-
-@font-face {
   font-family: "noto";
   font-style: normal;
   font-weight: normal;

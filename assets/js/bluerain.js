@@ -77,7 +77,6 @@ const rainFonts = [
   "monospace",
   "Chicago",
   "OCRAStd",
-  "Matrix Code NFI",
   "Courier New",
   "DatCub-Bold",
   "WhiteRabbit",
