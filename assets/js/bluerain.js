@@ -409,6 +409,8 @@ ws.addEventListener("message", async (event) => {
 });
 
 document.getElementById('filterInput').addEventListener('keydown', (event) => {
+  playActionSound(pressingSound);
+
   if (event.key === 'Enter') {
     document.getElementById('filterSubmit').click();
   }
