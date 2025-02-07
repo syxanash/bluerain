@@ -683,7 +683,7 @@ filterButton.addEventListener("click", () => {
 });
 
 aboutFilterButton.addEventListener("click", () => {
-  alert('This filter allows you to display only posts containing specific words in the digital rain as people write them in real time, so you need to be patient!');
+  alert('This filter allows you to display in the digital rain only posts containing specific words as people write them in real time, so you need to be patient!');
 });
 
 filterCloseButton.addEventListener("click", () => {
