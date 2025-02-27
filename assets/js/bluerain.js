@@ -202,14 +202,14 @@ function animateRain() {
       );
 
       // Render the previous character in the rain color if applicable
-      if (skeets[i].drop >= 2) {
-        const oldCharacter = characters[skeets[i].index - 1];
+      if (skeets[i].drop >= 3) {
+        const oldCharacter = characters[skeets[i].index - 2];
         if (oldCharacter) {
           writeCharacter(
             characterColor,
             oldCharacter,
             i * fontSize,
-            (skeets[i].drop - 1) * fontSize
+            (skeets[i].drop - 2) * fontSize
           );
         }
       }
@@ -219,12 +219,19 @@ function animateRain() {
     }
 
     if (skeets[i].drop * fontSize > canvas.height) {
-      // color the last character on the grid otherwise they stay white
+      // color the last 2 characters on the grid otherwise they stay white
       writeCharacter(
         characterColor,
         character,
         i * fontSize,
         (skeets[i].drop - 1) * fontSize
+      );
+
+      writeCharacter(
+        characterColor,
+        characters[skeets[i].index - 2],
+        i * fontSize,
+        (skeets[i].drop - 2) * fontSize
       );
 
       skeets[i].drop = 1;
