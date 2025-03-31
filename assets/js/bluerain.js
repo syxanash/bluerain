@@ -80,7 +80,8 @@ const rainFonts = [
   "Courier New",
   "DatCub-Bold",
   "WhiteRabbit",
-  "Space Mono"
+  "Space Mono",
+  "Comic Sans MS",
 ];
 
 const fontSizes = [10, 15, 17, 20, 25];
