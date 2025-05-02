@@ -35,8 +35,6 @@ const textShadowButtonOn = document.getElementById('textShadowButtonOn');
 const textShadowButtonOff = document.getElementById('textShadowButtonOff');
 const nsfwButtonOn = document.getElementById('nsfwButtonOn');
 const nsfwButtonOff = document.getElementById('nsfwButtonOff');
-const westernButtonOn = document.getElementById('westernOn');
-const westernButtonOff = document.getElementById('westernOff');
 
 const rainSound = new SoundControl('assets/sounds/rain.mp3', true);
 const pauseSound = new SoundControl('assets/sounds/paused.mp3');
@@ -64,7 +62,6 @@ const colors = [
 
 let rainColor = colors[0];
 let randomSelected = false;
-let horizontalFlow = false;
 
 const animationSpeed = [5, 10, 20, 30, 60];
 let choosenSpeed = animationSpeed[2];
@@ -83,8 +80,7 @@ const rainFonts = [
   "Courier New",
   "DatCub-Bold",
   "WhiteRabbit",
-  "Space Mono",
-  "Comic Sans MS",
+  "Space Mono"
 ];
 
 const fontSizes = [10, 15, 17, 20, 25];
@@ -117,11 +113,11 @@ canvas.height = window.innerHeight;
 selectAnimationCanvas.width = canvas.width;
 selectAnimationCanvas.height = canvas.height;
 
-const columns = Math.floor(canvas.width / fontSize);
+const rows = Math.floor(canvas.height / fontSize);
 
 ctx.font = `${fontSize}px ${rainFonts[0]}`;
 
-const skeets = Array(columns).fill({
+const skeets = Array(rows).fill({
   post: '',
   url: '',
   index: 0,
@@ -155,13 +151,13 @@ function resizeCanvas() {
   selectAnimationCanvas.width = canvas.width;
   selectAnimationCanvas.height = canvas.height;
 
-  const newColumns = Math.floor(canvas.width / fontSize);
+  const newRows = Math.floor(canvas.height / fontSize);
 
   const oldSkeets = [...skeets];
 
-  skeets.length = newColumns;
+  skeets.length = newRows;
 
-  for (let i = 0; i < newColumns; i++) {
+  for (let i = 0; i < newRows; i++) {
     if (oldSkeets[i] === undefined) {
       skeets[i] = {
         post: '',
@@ -184,7 +180,7 @@ function resizeCanvas() {
   ctx.font = `${fontSize}px ${rainFonts[fontDropdown.selectedIndex]}`;
 }
 
-function animateRainHorizontal() {
+function animateRain() {
   // Add fade effect to the canvas
   ctx.fillStyle = rainColor === '#000000' && !randomSelected
     ? `rgba(255, 255, 255, 0.1)`
@@ -253,71 +249,6 @@ function animateRainHorizontal() {
   }
 }
 
-function animateRainVertical() {
-  // Add fade effect to the canvas
-  ctx.fillStyle = rainColor === '#000000' && !randomSelected
-    ? `rgba(255, 255, 255, 0.1)`
-    : `rgba(0, 0, 0, 0.${fontSize > fontSizes[2] ? '1' : '06'})`;
-
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  for (let i = 0; i < skeets.length; i++) {
-    const characters = showEmojis
-      ? sanitizeForEmojis(skeets[i].post)
-      : stripEmojis(skeets[i].post);
-    const character = characters[skeets[i].index];
-    const characterColor = randomSelected ? skeets[i].color : rainColor;
-
-    if (character) {
-      writeCharacter(rainColor === '#000000' && !randomSelected ? "#000000" : "#ffffff",
-        character, i * fontSize,
-        skeets[i].position * fontSize
-      );
-
-      // Render the previous character in the rain color if applicable
-      if (skeets[i].position >= 3) {
-        const oldCharacter = characters[skeets[i].index - 2];
-        if (oldCharacter) {
-          writeCharacter(
-            characterColor,
-            oldCharacter,
-            i * fontSize,
-            (skeets[i].position - 2) * fontSize
-          );
-        }
-      }
-
-      skeets[i].position++;
-      skeets[i].index++;
-    }
-
-    if (skeets[i].position * fontSize > canvas.height) {
-      // color the last 2 characters on the grid otherwise they stay white
-      writeCharacter(
-        characterColor,
-        character,
-        i * fontSize,
-        (skeets[i].position - 1) * fontSize
-      );
-
-      writeCharacter(
-        characterColor,
-        characters[skeets[i].index - 2],
-        i * fontSize,
-        (skeets[i].position - 2) * fontSize
-      );
-
-      skeets[i].position = 1;
-      pastSkeets[i] = skeets[i];
-    }
-
-    if (skeets[i].index === characters.length && skeets[i].post !== '') {
-      pastSkeets[i] = skeets[i];
-      skeets[i] = { post: '', url: '', index: 0, position: 1 };
-    }
-  }
-}
-
 function loop(timestamp) {
   currentTime = timestamp;
   deltaTime = currentTime - previousTime;
@@ -325,10 +256,7 @@ function loop(timestamp) {
   if (deltaTime >= animationInterval) {
     previousTime = currentTime - (deltaTime % animationInterval);
 
-    if (!animationPaused) {
-      if (horizontalFlow) { animateRainHorizontal(); }
-      else { animateRainVertical(); }
-    }
+    if (!animationPaused) animateRain();
   }
 
   requestAnimationFrame(loop);
@@ -557,21 +485,6 @@ textShadowButtonOff.addEventListener('click', () => {
   selectBooleanButton(showTextShadow, textShadowButtonOn, textShadowButtonOff);
 });
 
-westernButtonOn.addEventListener('click', () => {
-  horizontalFlow = true;
-
-  playActionSound(pressingSound);
-  selectBooleanButton(horizontalFlow, westernButtonOn, westernButtonOff);
-});
-
-westernButtonOff.addEventListener('click', () => {
-  horizontalFlow = false;
-
-  playActionSound(pressingSound);
-  selectBooleanButton(horizontalFlow, westernButtonOn, westernButtonOff);
-});
-
-
 nsfwButtonOn.addEventListener('click', () => {
   nsfwDisplayed = true;
 
@@ -696,7 +609,7 @@ canvas.addEventListener("mousedown", function (e) {
     const skeetMessageSpan = document.getElementById("skeetMessage");
     const skeetUrlSpan = document.getElementById("skeetUrl");
 
-    if ((selectedRow + 2) > skeets[selectedColumn].position && pastSkeets[selectedColumn].post !== '') {
+    if ((selectedRow + 2) > skeets[selectedColumn].drop && pastSkeets[selectedColumn].post !== '') {
       skeetMessageSpan.innerText = pastSkeets[selectedColumn].post;
       skeetUrlSpan.innerHTML = `<a href="${pastSkeets[selectedColumn].url}" target="_blank">${pastSkeets[selectedColumn].url}</a>`;
     } else {
