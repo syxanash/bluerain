@@ -1,8 +1,8 @@
 @font-face {
   font-family: "Chicago";
-  src: url("../fonts/Chicago.woff")format("woff"),
-    url("../fonts/Chicago.woff2")format("woff2"),
-    url("../fonts/Chicago.ttf")format("truetype");
+  src: url("../fonts/Chicago.woff") format("woff"),
+    url("../fonts/Chicago.woff2") format("woff2"),
+    url("../fonts/Chicago.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -12,39 +12,38 @@
   font-family: "noto";
   font-style: normal;
   font-weight: normal;
-  src: local("noto"),
-    url("../fonts/noto.woff") format("woff");
+  src: local("noto"), url("../fonts/noto.woff") format("woff");
 }
 
 @font-face {
-  font-family: 'DatCub-Bold';
+  font-family: "DatCub-Bold";
   font-style: normal;
   font-weight: normal;
-  src: local("DatCub-Bold"), url("../fonts/DatCub-Bold.woff") format('woff');
+  src: local("DatCub-Bold"), url("../fonts/DatCub-Bold.woff") format("woff");
 }
 
 @font-face {
-  font-family: 'WhiteRabbit';
+  font-family: "WhiteRabbit";
   font-weight: normal;
   font-style: normal;
 
-  src: local("WhiteRabbit"), url("../fonts/WhiteRabbit.woff") format('woff');
+  src: local("WhiteRabbit"), url("../fonts/WhiteRabbit.woff") format("woff");
 }
 
 @font-face {
   font-family: "Space Mono";
-  src: url("../fonts/Space-Mono.woff")format("woff"),
-    url("../fonts/Space-Mono.woff2")format("woff2");
+  src: url("../fonts/Space-Mono.woff") format("woff"),
+    url("../fonts/Space-Mono.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'OCRAStd';
+  font-family: "OCRAStd";
   font-weight: normal;
   font-style: normal;
-  src: local("OCRAStd"), url(../fonts/OCRAStd.woff) format('woff');
+  src: local("OCRAStd"), url(../fonts/OCRAStd.woff) format("woff");
 }
 
 * {
@@ -81,13 +80,19 @@ canvas {
 }
 
 .noto-emoji-warning {
-  font-family: 'noto';
+  font-family: "noto";
   color: #f3ff0a;
 }
 
 .noto-emoji-coffee a {
-  font-family: 'noto';
+  font-family: "noto";
   color: #ff780a;
+  text-decoration: none;
+}
+
+.noto-emoji-script a {
+  font-family: "noto";
+  color: #0aff0e;
   text-decoration: none;
 }
 
@@ -99,7 +104,7 @@ canvas {
   align-items: center;
   margin: auto;
   text-align: left;
-  font-family: 'OcraStd';
+  font-family: "OcraStd";
   font-size: 1rem;
   text-shadow: 0px 0px 20px #0ae2ff;
   color: #0ae2ff;
