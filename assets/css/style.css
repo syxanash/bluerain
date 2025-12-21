@@ -10,9 +10,10 @@
 
 @font-face {
   font-family: 'Unifont';
-  src: url('../fonts/unifont.woff') format('woff'), url('../fonts/unifont.ttf') format('truetype');
+  src: url('../fonts/unifont.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
