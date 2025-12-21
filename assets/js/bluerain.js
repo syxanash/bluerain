@@ -81,6 +81,7 @@ const rainFonts = [
   "DatCub-Bold",
   "WhiteRabbit",
   "Space Mono",
+  "Unifont",
   "Comic Sans MS",
 ];
 
