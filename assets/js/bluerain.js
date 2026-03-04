@@ -5,7 +5,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const urlFilteredWords = urlParams.get('filter')?.split('|').map(word => decodeURIComponent(word)).filter(word => word.trim() !== '');
 
 const ws = new WebSocket(
-  "wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post"
+  "wss://jetstream2.us-east.bsky.network/subscribe?wantedCollections=app.bsky.feed.post"
 );
 
 const cornerButtons = document.querySelector(".corner-buttons");
