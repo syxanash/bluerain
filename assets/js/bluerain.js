@@ -439,6 +439,11 @@ window.addEventListener("keydown", function (e) {
       filterInput.focus();
     }
   }
+
+  if (e.code === 'Space') {
+    e.preventDefault();
+    pauseButton.click();
+  }
 });
 
 document.addEventListener("mousemove", () => {
